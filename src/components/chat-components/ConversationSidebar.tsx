@@ -1,36 +1,28 @@
 'use client'
 
-import { createConversationThread, deleteConversationThread } from '@/actions/chat-actions'
+import Link from 'next/link'
+import { useOptimistic } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
+import { deleteConversationThread } from '@/actions/chat-actions'
+
 import { Button } from '@/components/ui/button'
 import { ScrollArea } from '@/components/ui/scroll-area'
-import Link from 'next/link'
 import { Trash } from 'lucide-react'
-import { useOptimistic, useState } from 'react'
-import { useRouter, useSearchParams } from 'next/navigation'
 
-export default function ConversationSidebar({ allThreads }: { allThreads: { id: number }[] }) {
+interface ConversationSidebarProps {
+	allThreads: { id: number }[]
+}
+
+export default function ConversationSidebar({ allThreads }: ConversationSidebarProps) {
 	const router = useRouter()
 	const searchParams = useSearchParams()
-	const currentThread = parseInt(searchParams.get('thread') || '')
+	const currentThread = parseInt(searchParams.get('thread') || '') // using the current thread to indicate whether we should navigate to /chat or stay on current route if the thread being deleted is not the current thread
 	const [optimisticThreads, deleteOptimisticThreads] = useOptimistic(allThreads, (state, deletedThread) =>
 		state.filter((thread) => thread.id !== deletedThread)
 	)
-	const [isLoading, setIsLoading] = useState(false)
 
-	const handleCreateThread = async () => {
-		setIsLoading(true)
-		const newThreadId = await createConversationThread()
-		setIsLoading(false)
-		if (newThreadId) {
-			router.push(`/chat?thread=${newThreadId}`)
-		}
-	}
 	return (
-		<div className="w-64 border-r h-full p-4">
-			<Button className="w-full mb-4" variant="outline" onClick={handleCreateThread} disabled={isLoading}>
-				New Chat
-			</Button>
-
+		<div>
 			<h2 className="text-lg font-medium mb-4">Past Conversations</h2>
 			<ScrollArea className="h-[calc(100vh-160px)] pr-2 space-y-2">
 				{optimisticThreads.map((thread) => (
@@ -47,7 +39,7 @@ export default function ConversationSidebar({ allThreads }: { allThreads: { id: 
 								try {
 									await deleteConversationThread(thread.id)
 								} catch (err) {
-									console.error(err)
+									console.error('error while deleting thread, on client-side', err)
 								}
 								if (currentThread === thread.id) {
 									router.push('/chat')

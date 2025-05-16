@@ -30,7 +30,10 @@ export async function createUserProfile(data: ProfileFormValues) {
 		user_id: user.id,
 	})
 
-	if (error) if (!result.success) return redirect('/get-started?page=personal-info&message=Invalid form submission')
+	if (error) {
+		console.log('Failed to create user profile in db', error)
+		return redirect('/get-started?page=personal-info&message=Failed to create profile')
+	}
 
 	redirect('/dashboard')
 }
@@ -62,9 +65,9 @@ export async function updateUserProfile(data: ProfileFormValues) {
 		})
 		.eq('user_id', user.id)
 
-	if (error)
-		if (!result.success)
-			return redirect('/get-started?page=personal-info&edit=true&message=Invalid form submission')
-
+	if (error) {
+		console.log('Failed to update user profile in db', error)
+		return redirect('/get-started?page=personal-info&message=Failed to update profile')
+	}
 	redirect('/dashboard')
 }

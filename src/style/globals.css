@@ -130,3 +130,17 @@
 		@apply bg-background text-foreground;
 	}
 }
+
+@keyframes gradient {
+	0% {
+		background-position: 200% 0;
+	}
+	100% {
+		background-position: -200% 0;
+	}
+}
+
+.animate-gradient {
+	background-size: 400% 100%;
+	animation: gradient 2s ease infinite;
+}

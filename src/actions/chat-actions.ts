@@ -124,7 +124,8 @@ export async function createConversationThread() {
 		redirect('/chat?error=Failed to create a new conversation thread')
 	}
 
-	return data.id
+	// return data.id
+	redirect(`/chat?thread=${data.id}`)
 }
 
 export async function deleteConversationThread(threadId: number) {

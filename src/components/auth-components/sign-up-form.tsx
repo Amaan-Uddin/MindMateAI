@@ -24,7 +24,6 @@ export function SignUpForm({ className, ...props }: React.ComponentPropsWithoutR
 			name: '',
 			email: '',
 			password: '',
-			confirmPassword: '',
 		},
 	})
 
@@ -63,15 +62,6 @@ export function SignUpForm({ className, ...props }: React.ComponentPropsWithoutR
 								<Input id="password" type="password" {...register('password')} />
 								{errors.password?.message && (
 									<span className="text-red-500">{errors.password.message}</span>
-								)}
-							</div>
-							<div className="grid gap-2">
-								<div className="flex items-center">
-									<Label htmlFor="confirm-password">Confirm Password</Label>
-								</div>
-								<Input id="confirm-password" type="password" {...register('confirmPassword')} />
-								{errors.confirmPassword?.message && (
-									<span className="text-red-500">{errors.confirmPassword.message}</span>
 								)}
 							</div>
 							<Button type="submit" className="w-full" disabled={isSubmitting}>

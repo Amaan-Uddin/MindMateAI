@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation'
 import { Suspense } from 'react'
 
 import ProfileContent from './profile-content'
+import { ProfileSkeleton } from '@/components/skeleton-loaders/profile-skeleton'
 
 export default async function ProfilePage() {
 	const supabase = await createClient()
@@ -15,7 +16,7 @@ export default async function ProfilePage() {
 	}
 	return (
 		<>
-			<Suspense fallback={<p className="text-center py-10">Loading...</p>}>
+			<Suspense fallback={<ProfileSkeleton />}>
 				<ProfileContent userId={user.id} name={user.user_metadata.name} email={user.email!} />
 			</Suspense>
 		</>

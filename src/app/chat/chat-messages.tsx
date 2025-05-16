@@ -1,7 +1,9 @@
 import { createClient } from '@/lib/supabase/server'
+
 import ChatInterface from '@/components/chat-components/ChatInterface'
 
 export default async function ChatMessages({ thread, userId }: { thread: number; userId: string }) {
+	// await new Promise((resolve) => setTimeout(resolve, 10000))
 	const supabase = await createClient()
 
 	const { data: MsgData, error: MsgError } = await supabase

@@ -20,7 +20,7 @@ export default async function Header() {
 					<Link href="/" className="text-3xl font-bold">
 						MindMate
 					</Link>
-					<NavLinks />
+					{user !== null ? <NavLinks /> : null}
 				</div>
 				<div className="flex items-center justify-between gap-6">
 					<ThemeToggle />

@@ -13,7 +13,7 @@ export default async function ConditionPage({ params }: { params: Promise<{ cond
 
 	return (
 		<div className="bg-background flex items-center justify-center p-4 sm:p-6 ">
-			<Card className="w-full max-w-lg shadow-lg transition-all duration-300 hover:shadow-xl animate-in fade-in gap-2">
+			<Card className="w-full max-w-lg gap-2">
 				<CardHeader className="border-b border-border">
 					<CardTitle className="flex items-center gap-3 text-2xl font-bold">
 						<span className="text-3xl">{condition.icon}</span>
@@ -21,6 +21,7 @@ export default async function ConditionPage({ params }: { params: Promise<{ cond
 					</CardTitle>
 				</CardHeader>
 				<CardContent className="pt-6 space-y-6">
+					{/* Some note or info */}
 					<div className="rounded-md bg-muted p-4">
 						<h3 className="text-sm font-semibold text-muted-foreground mb-2">What You'll Get</h3>
 						<p className="text-sm text-foreground">{conditionPrompts[condition.id]}</p>
@@ -28,6 +29,7 @@ export default async function ConditionPage({ params }: { params: Promise<{ cond
 					<p className="text-muted-foreground text-sm">
 						Explore personalized support for {condition.name.toLowerCase()} with our tools.
 					</p>
+					{/* Buttons */}
 					<div className="flex flex-col gap-3">
 						<Link href={'/chat'}>
 							<Button
