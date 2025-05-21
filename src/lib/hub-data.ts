@@ -55,30 +55,6 @@ export const conditions: Condition[] = [
 		icon: '👁️',
 		description: 'Intense, irrational distrust of others',
 	},
-	{
-		id: ConditionId.Addiction,
-		name: 'Addiction',
-		icon: '⛓️',
-		description: 'Compulsive substance use or behavior despite harmful consequences',
-	},
-	{
-		id: ConditionId.EatingDisorders,
-		name: 'Eating Disorders',
-		icon: '🍽️',
-		description: 'Abnormal eating habits that negatively impact health',
-	},
-	{
-		id: ConditionId.Phobia,
-		name: 'Phobias',
-		icon: '😱',
-		description: 'Extreme, irrational fear of specific objects or situations',
-	},
-	{
-		id: ConditionId.Anger,
-		name: 'Anger Issues',
-		icon: '😠',
-		description: 'Difficulty controlling anger that affects daily life',
-	},
 ]
 
 export const assessmentQuestions: AssessmentQuestion = {
@@ -287,96 +263,6 @@ export const assessmentQuestions: AssessmentQuestion = {
 			options: ['Not at all', 'Slightly', 'Moderately', 'Severely'],
 		},
 	],
-	[ConditionId.Addiction]: [
-		{
-			question: 'How often do you find that you use substances or engage in behaviors more than you intended?',
-			options: ['Never', 'Occasionally', 'Frequently', 'Almost always'],
-		},
-		{
-			question: 'How often have you wanted to cut down but found it difficult to do so?',
-			options: ['Never', 'Occasionally', 'Frequently', 'Almost always'],
-		},
-		{
-			question:
-				'How much time do you spend obtaining, using, or recovering from the effects of substances or behaviors?',
-			options: ['None', 'A little', 'Quite a bit', 'A lot'],
-		},
-		{
-			question: 'Have you given up important activities because of your substance use or behaviors?',
-			options: ['No', 'Rarely', 'Sometimes', 'Often'],
-		},
-		{
-			question:
-				'Do you continue to use substances or engage in behaviors despite knowing they cause physical or psychological problems?',
-			options: ['No', 'Rarely', 'Sometimes', 'Often'],
-		},
-	],
-	[ConditionId.EatingDisorders]: [
-		{
-			question: 'How often do you feel that food controls your life?',
-			options: ['Never', 'Occasionally', 'Frequently', 'Always'],
-		},
-		{
-			question: 'How often do you make yourself sick or use laxatives when you feel uncomfortably full?',
-			options: ['Never', 'Occasionally', 'Frequently', 'Always'],
-		},
-		{
-			question: 'How concerned are you about your weight or body shape?',
-			options: ['Not concerned', 'Slightly concerned', 'Moderately concerned', 'Extremely concerned'],
-		},
-		{
-			question: 'Have others expressed concern about your eating habits or weight?',
-			options: ['Never', 'Rarely', 'Sometimes', 'Often'],
-		},
-		{
-			question: 'Do you experience guilt or shame about eating?',
-			options: ['Never', 'Occasionally', 'Frequently', 'Always'],
-		},
-	],
-	[ConditionId.Phobia]: [
-		{
-			question: 'Do you have an intense fear of a specific object, place, or situation?',
-			options: ['No', "Yes, but it's mild", "Yes, it's moderate", "Yes, it's severe"],
-		},
-		{
-			question: 'How often do you avoid situations because of your fear?',
-			options: ['Never', 'Occasionally', 'Frequently', 'Always'],
-		},
-		{
-			question: 'When exposed to your fear, how intense is your anxiety?',
-			options: ['Not anxious', 'Mildly anxious', 'Moderately anxious', 'Severely anxious'],
-		},
-		{
-			question: 'Do you recognize that your fear is excessive or unreasonable?',
-			options: ['Yes, completely', 'Somewhat', 'Not really', 'Not at all'],
-		},
-		{
-			question: 'How much does this fear interfere with your normal routine or relationships?',
-			options: ['Not at all', 'Slightly', 'Moderately', 'Severely'],
-		},
-	],
-	[ConditionId.Anger]: [
-		{
-			question: 'How often do you find yourself feeling angry?',
-			options: ['Rarely', 'Occasionally', 'Frequently', 'Almost always'],
-		},
-		{
-			question: 'How difficult is it for you to control your anger?',
-			options: ['Not difficult', 'Somewhat difficult', 'Very difficult', 'Extremely difficult'],
-		},
-		{
-			question: 'How often do you express your anger in destructive ways (yelling, breaking things)?',
-			options: ['Never', 'Rarely', 'Sometimes', 'Often'],
-		},
-		{
-			question: 'Have others commented on your anger or suggested you get help?',
-			options: ['Never', 'Rarely', 'Sometimes', 'Often'],
-		},
-		{
-			question: 'How much has anger affected your relationships or daily life?',
-			options: ['Not at all', 'Slightly', 'Moderately', 'Significantly'],
-		},
-	],
 }
 
 export const conditionPrompts: ConditionPrompt = {
@@ -389,8 +275,4 @@ export const conditionPrompts: ConditionPrompt = {
 	[ConditionId.OCD]: 'Strategies for reducing OCD behaviors',
 	[ConditionId.Insomnia]: 'Habits for improving sleep quality',
 	[ConditionId.Paranoia]: 'Approaches for managing paranoid thoughts',
-	[ConditionId.Addiction]: 'Strategies for addiction recovery',
-	[ConditionId.EatingDisorders]: 'Resources for healthier eating habits',
-	[ConditionId.Phobia]: 'Techniques for overcoming specific phobias',
-	[ConditionId.Anger]: 'Techniques for controlling anger issues',
 }

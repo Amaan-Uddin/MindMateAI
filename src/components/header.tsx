@@ -6,7 +6,7 @@ import { createClient } from '@/lib/supabase/server'
 import { LogoutButton } from './auth-components/logout-button'
 import { NavLinks } from './nav-links'
 
-export default async function Header() {
+export async function Header() {
 	const supabase = await createClient()
 
 	const {

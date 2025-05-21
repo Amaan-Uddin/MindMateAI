@@ -1,9 +1,10 @@
 'use client'
 
-import { usePathname } from 'next/navigation'
 import Link from 'next/link'
+import { cn } from '@/lib/utils'
+import { usePathname } from 'next/navigation'
+
 import { Button } from './ui/button'
-import clsx from 'clsx'
 
 export function NavLinks() {
 	const pathname = usePathname()
@@ -14,9 +15,10 @@ export function NavLinks() {
 				<Link href="/dashboard">
 					<Button
 						variant="link"
-						className={clsx({
-							'text-primary underline': pathname.startsWith('/dashboard'),
-						})}
+						className={cn(
+							'text-accent-foreground decoration-primary',
+							pathname.startsWith('/dashboard') ? 'underline decoration-primary' : ''
+						)}
 					>
 						Dashboard
 					</Button>
@@ -26,9 +28,10 @@ export function NavLinks() {
 				<Link href="/chat">
 					<Button
 						variant="link"
-						className={clsx({
-							'text-primary underline': pathname.startsWith('/chat'),
-						})}
+						className={cn(
+							'text-accent-foreground decoration-primary',
+							pathname.startsWith('/chat') ? 'underline decoration-primary' : ''
+						)}
 					>
 						AI Chat
 					</Button>
@@ -38,11 +41,25 @@ export function NavLinks() {
 				<Link href="/mental-hub">
 					<Button
 						variant="link"
-						className={clsx({
-							'text-primary underline': pathname.startsWith('/mental-hub'),
-						})}
+						className={cn(
+							'text-accent-foreground decoration-primary',
+							pathname.startsWith('/mental-hub') ? 'underline decoration-primary' : ''
+						)}
 					>
 						Mental Hub
+					</Button>
+				</Link>
+			</li>
+			<li>
+				<Link href="/wellness-library">
+					<Button
+						variant="link"
+						className={cn(
+							'text-accent-foreground decoration-primary',
+							pathname.startsWith('/wellness-library') ? 'underline decoration-primary' : ''
+						)}
+					>
+						Wellness Library
 					</Button>
 				</Link>
 			</li>

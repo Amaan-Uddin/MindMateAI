@@ -14,8 +14,11 @@ import { loginSchema, LoginFormValues } from '@/utils/validation/authSchema'
 import { login } from '@/actions/auth-actions'
 import { toast } from 'sonner'
 
-import type { LoginFormProps } from '@/utils/types/login-form-type'
 import { useEffect } from 'react'
+
+type LoginFormProps = React.ComponentPropsWithoutRef<'div'> & {
+	ErrorMessage?: string
+}
 
 export function LoginForm({ className, ErrorMessage, ...props }: LoginFormProps) {
 	const {

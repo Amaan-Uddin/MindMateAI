@@ -187,6 +187,7 @@ export type Database = {
           emergency_name: string
           emergency_phone_number: string
           id: string
+          mood: string | null
           phone_number: string
           summary: string
           user_id: string
@@ -197,6 +198,7 @@ export type Database = {
           emergency_name: string
           emergency_phone_number: string
           id?: string
+          mood?: string | null
           phone_number: string
           summary?: string
           user_id: string
@@ -207,6 +209,7 @@ export type Database = {
           emergency_name?: string
           emergency_phone_number?: string
           id?: string
+          mood?: string | null
           phone_number?: string
           summary?: string
           user_id?: string
@@ -217,17 +220,44 @@ export type Database = {
         Row: {
           created_at: string
           id: number
+          thread_title: string | null
           user_id: string
         }
         Insert: {
           created_at?: string
           id?: number
+          thread_title?: string | null
           user_id: string
         }
         Update: {
           created_at?: string
           id?: number
+          thread_title?: string | null
           user_id?: string
+        }
+        Relationships: []
+      }
+      youtube_videos: {
+        Row: {
+          created_at: string
+          id: number
+          tags: string[] | null
+          title: string
+          video_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: number
+          tags?: string[] | null
+          title: string
+          video_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: number
+          tags?: string[] | null
+          title?: string
+          video_id?: string
         }
         Relationships: []
       }

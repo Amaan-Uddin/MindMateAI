@@ -10,10 +10,13 @@ import { ScrollArea } from '@/components/ui/scroll-area'
 import { Trash } from 'lucide-react'
 
 interface ConversationSidebarProps {
-	allThreads: { id: number }[]
+	allThreads: {
+		id: number
+		thread_title: string | null
+	}[]
 }
 
-export default function ConversationSidebar({ allThreads }: ConversationSidebarProps) {
+export function ConversationSidebar({ allThreads }: ConversationSidebarProps) {
 	const router = useRouter()
 	const searchParams = useSearchParams()
 	const currentThread = parseInt(searchParams.get('thread') || '') // using the current thread to indicate whether we should navigate to /chat or stay on current route if the thread being deleted is not the current thread
@@ -25,13 +28,15 @@ export default function ConversationSidebar({ allThreads }: ConversationSidebarP
 		<div>
 			<h2 className="text-lg font-medium mb-4">Past Conversations</h2>
 			<ScrollArea className="h-[calc(100vh-160px)] pr-2 space-y-2">
-				{optimisticThreads.map((thread) => (
+				{optimisticThreads.map((thread, index) => (
 					<div key={thread.id} className="flex justify-between items-center">
 						<Link
 							href={`/chat?thread=${thread.id}`}
 							className="w-full flex flex-col items-start text-left truncate"
 						>
-							<span className="font-medium truncate w-full">Conversation {thread.id}</span>
+							<span className="font-medium truncate w-full">
+								{thread.thread_title !== null ? thread.thread_title : `New conversation ${index}`}
+							</span>
 						</Link>
 						<form
 							action={async () => {

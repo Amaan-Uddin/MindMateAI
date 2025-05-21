@@ -1,6 +1,6 @@
 import { ChatGroq } from '@langchain/groq'
 
 export const model = new ChatGroq({
-	model: 'llama-3.3-70b-versatile',
+	model: process.env.MODEL_NAME!,
 	temperature: 0,
 })

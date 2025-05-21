@@ -1,4 +1,4 @@
-import { SystemMessage, HumanMessage, AIMessage, RemoveMessage } from '@langchain/core/messages'
+import { HumanMessage, RemoveMessage } from '@langchain/core/messages'
 import { MessagesAnnotation, StateGraph, START, END, Annotation } from '@langchain/langgraph'
 import { PostgresSaver } from '@langchain/langgraph-checkpoint-postgres'
 import { v4 as uuidv4 } from 'uuid'
@@ -26,15 +26,15 @@ const GraphAnnotation = Annotation.Root({
 // Define the logic to call the model
 async function callModel(state: typeof GraphAnnotation.State): Promise<Partial<typeof GraphAnnotation.State>> {
 	// If a summary exists, we add this in as a system message
-	const { summary } = state
+	// const { summary } = state
 	let { messages } = state
-	if (summary) {
-		const systemMessage = new SystemMessage({
-			id: uuidv4(),
-			content: `Summary of conversation earlier: ${summary}`,
-		})
-		messages = [systemMessage, ...messages]
-	}
+	// if (summary) {
+	// 	const systemMessage = new SystemMessage({
+	// 		id: uuidv4(),
+	// 		content: `Summary of conversation earlier: ${summary}`,
+	// 	})
+	// 	messages = [systemMessage, ...messages]
+	// }
 	const response = await model.invoke(messages)
 	// We return an object, because this will get added to the existing state
 	return { messages: [response] }
@@ -44,7 +44,7 @@ async function callModel(state: typeof GraphAnnotation.State): Promise<Partial<t
 function shouldContinue(state: typeof GraphAnnotation.State): 'summarize_conversation' | typeof END {
 	const messages = state.messages
 	// If there are more than six messages, then we summarize the conversation
-	if (messages.length > 8) {
+	if (messages.length == 9) {
 		return 'summarize_conversation'
 	}
 	// Otherwise we can just end
@@ -100,7 +100,7 @@ async function summarizeConversation(
 	const response = await model.invoke(allMessages)
 	// We now need to delete messages that we no longer want to show up
 	// I will delete all but the last two messages, but you can change this
-	const deleteMessages = messages.slice(0, -2).map((m) => new RemoveMessage({ id: String(m.id) }))
+	const deleteMessages = messages.slice(1, -2).map((m) => new RemoveMessage({ id: String(m.id) }))
 	if (typeof response.content !== 'string') {
 		throw new Error('Expected a string response from the model')
 	}

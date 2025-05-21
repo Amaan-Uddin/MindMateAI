@@ -2,7 +2,11 @@ import { notFound } from 'next/navigation'
 import { Assessment } from './assessment'
 import { conditions, assessmentQuestions } from '@/lib/hub-data'
 
-export default async function AssessmentPage({ params }: { params: Promise<{ conditionId: string }> }) {
+interface Props {
+	params: Promise<{ conditionId: string }>
+}
+
+export default async function AssessmentPage({ params }: Props) {
 	const { conditionId } = await params
 
 	const condition = conditions.find((c) => c.id === conditionId)

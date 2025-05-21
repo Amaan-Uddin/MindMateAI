@@ -5,7 +5,11 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { MoveLeft } from 'lucide-react'
 
-export default async function ConditionPage({ params }: { params: Promise<{ conditionId: string }> }) {
+interface Props {
+	params: Promise<{ conditionId: string }>
+}
+
+export default async function ConditionPage({ params }: Props) {
 	const { conditionId } = await params
 
 	const condition = conditions.find((c) => c.id === conditionId)

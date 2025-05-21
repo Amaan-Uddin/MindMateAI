@@ -1,13 +1,22 @@
-import { Suspense } from 'react'
-import COmp from './comp'
+import { createClient } from '@/lib/supabase/server'
+import { redirect } from 'next/navigation'
+import { DashboardMoodPicker } from './mood-picker'
 
 export default async function DashboardPage() {
+	const supabase = await createClient()
+	const {
+		data: { user },
+		error: authError,
+	} = await supabase.auth.getUser()
+	if (authError || !user) {
+		redirect('/auth/login')
+	}
+
 	return (
-		<div className="flex w-full items-center justify-center gap-2">
-			<h1>Dashboard</h1>
-			<Suspense fallback={<p>Loading...</p>}>
-				<COmp />
-			</Suspense>
+		<div className="min-h-screen bg-background p-4 sm:p-6">
+			<div className="max-w-4xl mx-auto">
+				<DashboardMoodPicker userId={user.id} />
+			</div>
 		</div>
 	)
 }

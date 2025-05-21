@@ -8,7 +8,12 @@ import { Progress } from '@/components/ui/progress'
 import { Condition, Questions, Result } from '@/utils/types/mental-hub-types'
 import { MoveLeft, Info } from 'lucide-react'
 
-export function Assessment({ condition, questions }: { condition: Condition; questions: Questions[] }) {
+interface Props {
+	condition: Condition
+	questions: Questions[]
+}
+
+export function Assessment({ condition, questions }: Props) {
 	const router = useRouter()
 	const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
 	const [answers, setAnswers] = useState<number[]>([])

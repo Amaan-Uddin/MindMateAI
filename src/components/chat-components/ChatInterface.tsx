@@ -15,7 +15,7 @@ interface ChatInterfaceProps {
 	messages: Message[]
 }
 
-export default function ChatInterface({ threadId, messages }: ChatInterfaceProps) {
+export function ChatInterface({ threadId, messages }: ChatInterfaceProps) {
 	const [isMounted, setIsMounted] = useState(false)
 	const { theme } = useTheme()
 	const [isPending, startTransition] = useTransition()
@@ -23,22 +23,19 @@ export default function ChatInterface({ threadId, messages }: ChatInterfaceProps
 	const scrollAreaRef = useRef<HTMLDivElement>(null)
 	const textareaRef = useRef<HTMLTextAreaElement>(null)
 
-	const [optimisticMessages, addOptimisticMessages] = useOptimistic(
-		messages,
-		(state: Message[], userMessage: string) => [
-			...state,
-			{
-				id: Date.now(),
-				content: userMessage,
-				role: 'user',
-			},
-			{
-				id: Date.now() + 2,
-				content: 'Loading Message...',
-				role: 'load',
-			},
-		]
-	)
+	const [optimisticMessages, addOptimisticMessages] = useOptimistic(messages, (state, userMessage: string) => [
+		...state,
+		{
+			id: Date.now(),
+			content: userMessage,
+			role: 'user',
+		},
+		{
+			id: Date.now() + 10000,
+			content: 'Loading Message...',
+			role: 'load',
+		},
+	])
 
 	useEffect(() => {
 		setIsMounted(true)

@@ -7,7 +7,13 @@ import { Button } from '@/components/ui/button'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
 
-export default async function ProfileContent({ userId, name, email }: { userId: string; name: string; email: string }) {
+interface Props {
+	userId: string
+	name: string
+	email: string
+}
+
+export default async function ProfileContent({ userId, name, email }: Props) {
 	const supabase = await createClient()
 	const { data, error } = await supabase
 		.from('personal_info')

@@ -7,17 +7,7 @@ import { UseFormRegister, FieldErrors } from 'react-hook-form'
 import { ProfileFormValues } from '@/utils/validation/profileSchema'
 import { useRouter } from 'next/navigation'
 
-const conditionsList = [
-	'Anxiety',
-	'Depression',
-	'ADHD',
-	'PTSD',
-	'Bipolar Disorder',
-	'OCD',
-	'Eating Disorder',
-	'Insomnia',
-	'None',
-]
+const conditionsList = ['Anxiety', 'Depression', 'Stress', 'Bipolar', 'ADHD', 'PTSD', 'OCD', 'Insomnia', 'Paranoia']
 
 interface Props {
 	register: UseFormRegister<ProfileFormValues>

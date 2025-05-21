@@ -8,10 +8,6 @@ export enum ConditionId {
 	OCD = 'ocd',
 	Insomnia = 'insomnia',
 	Paranoia = 'paranoia',
-	Addiction = 'addiction',
-	EatingDisorders = 'eating-disorders',
-	Phobia = 'phobia',
-	Anger = 'anger',
 }
 
 export type Condition = {
