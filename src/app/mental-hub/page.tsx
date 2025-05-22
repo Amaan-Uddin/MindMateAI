@@ -1,17 +1,25 @@
-import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
+import { redirect } from 'next/navigation'
+import { JSX } from 'react'
 
 import { ConditionCard } from '@/components/mental-hub-components/condition-card'
+
 import { conditions } from '@/lib/hub-data'
 
-export default async function MentalHealthHubPage() {
+/**
+ * MentalHealthHubPage component - main page for the mental health hub.
+ * Displays a grid of mental health condition cards.
+ *
+ * @returns {Promise<JSX.Element>} The mental health hub page layout with condition cards.
+ */
+export default async function MentalHealthHubPage(): Promise<JSX.Element> {
 	const supabase = await createClient()
 	const {
 		data: { user },
 		error: authError,
 	} = await supabase.auth.getUser()
 	if (authError || !user) {
-		redirect('/auth/login')
+		return redirect('/auth/login')
 	}
 
 	return (

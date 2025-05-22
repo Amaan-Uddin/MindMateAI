@@ -1,19 +1,26 @@
 'use server'
 
+import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 
-import { createClient } from '@/lib/supabase/server'
-import { loginSchema, signupSchema } from '@/utils/validation/authSchema'
+import { loginSchema, signupSchema, SignupFormValues, LoginFormValues } from '@/utils/validation/authSchema'
 
-export async function signup(data: { name: string; email: string; password: string }) {
+/**
+ * registers a new user to the database and redirects them to `/get-started` route
+ *
+ * @param {SignupFormValues} data - the form data containing user's name, email and password for signup
+ */
+export async function signup(data: SignupFormValues) {
 	const supabase = await createClient()
 
-	const parseResult = signupSchema.safeParse({ name: data.name, email: data.email, password: data.password })
-	if (!parseResult.success) {
-		redirect('/auth/login?message=Invalid form submission')
-	}
-	const { name, email, password } = parseResult.data
+	// validate the data with signupSchema defined using zod
+	const result = signupSchema.safeParse({ name: data.name, email: data.email, password: data.password })
+	if (!result.success) return redirect('/auth/login?message=Invalid form submission')
 
+	// unpack result data
+	const { name, email, password } = result.data
+
+	// performing user signup with email and password, data is stored in supabase postgres db
 	const { error } = await supabase.auth.signUp({
 		email,
 		password,
@@ -23,43 +30,47 @@ export async function signup(data: { name: string; email: string; password: stri
 			},
 		},
 	})
-
 	if (error) {
 		console.log('error occurred during signup', error)
-		redirect(`/auth/login?message=${error.message}`)
+		return redirect(`/auth/login?message=Failed to sign up user`)
 	}
 
-	redirect('/get-started?page=profile')
+	return redirect('/get-started?page=profile')
 }
 
-export async function login(data: { email: string; password: string }) {
+/**
+ * sign-in unauthenticated user with password and redirects them to `/dashboard` route
+ *
+ * @param {LoginFormValues} data - the form data containing user's email and password for login
+ */
+export async function login(data: LoginFormValues) {
 	const supabase = await createClient()
 
-	const parseResult = loginSchema.safeParse({ email: data.email, password: data.password })
-	if (!parseResult.success) {
-		redirect('/auth/login?message=Invalid form submission')
-	}
-	const { email, password } = parseResult.data
+	const result = loginSchema.safeParse({ email: data.email, password: data.password })
+	if (!result.success) return redirect('/auth/login?message=Invalid form submission')
+
+	const { email, password } = result.data
 
 	const { error } = await supabase.auth.signInWithPassword({ email, password })
-
 	if (error) {
 		console.log('error occurred during login', error)
-		redirect(`/auth/login?message=${error.message}`)
+		return redirect(`/auth/login?message=Failed to sign in user.`)
 	}
 
-	redirect('/dashboard')
+	return redirect('/dashboard')
 }
 
+/**
+ * ends user session and removes auth cookies from client, redirects to `/` route
+ */
 export async function logout() {
 	const supabase = await createClient()
 
 	const { error } = await supabase.auth.signOut()
-
 	if (error) {
 		console.log('error occurred during logout', error)
-		redirect(`/auth/login?message=${error.message}`)
+		return redirect(`/auth/login?message=Logout failed. Error occurred`)
 	}
 
-	redirect('/')
+	return redirect('/')
 }

@@ -1,19 +1,30 @@
 'use client'
 
-import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { JSX, useState } from 'react'
+
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Progress } from '@/components/ui/progress'
-import { Condition, Questions, Result } from '@/utils/types/mental-hub-types'
 import { MoveLeft, Info } from 'lucide-react'
+
+import { Condition, Questions, Result } from '@/utils/types/mental-hub-types'
 
 interface Props {
 	condition: Condition
 	questions: Questions[]
 }
 
-export function Assessment({ condition, questions }: Props) {
+/**
+ * Assessment component renders some questions for a specific condition and calculates the assessment result based on user answers.
+ *
+ * @param {Object} props - Component props.
+ * @param {Condition} props.condition - The condition object containing id, name, icon, etc.
+ * @param {Question[]} props.questions - Array of questions for the assessment, each with options.
+ *
+ * @returns {JSX.Element} JSX element rendering the assessment UI.
+ */
+export function Assessment({ condition, questions }: Props): JSX.Element {
 	const router = useRouter()
 	const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
 	const [answers, setAnswers] = useState<number[]>([])

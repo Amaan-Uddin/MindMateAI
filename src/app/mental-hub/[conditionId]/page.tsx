@@ -1,15 +1,27 @@
-import { notFound } from 'next/navigation'
 import Link from 'next/link'
-import { conditions, conditionPrompts } from '@/lib/hub-data'
+import { JSX } from 'react'
+import { notFound } from 'next/navigation'
+
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { MoveLeft } from 'lucide-react'
+
+import { conditions, conditionPrompts } from '@/lib/hub-data'
 
 interface Props {
 	params: Promise<{ conditionId: string }>
 }
 
-export default async function ConditionPage({ params }: Props) {
+/**
+ * ConditionPage component - displays details for a specific mental health condition.
+ * Redirects to notFound page if the condition does not exist.
+ *
+ * @param {Object} props - Component props.
+ * @param {Promise<{ conditionId: string }>} props.params - Promise resolving to the route parameters containing the condition ID.
+ *
+ * @returns {Promise<JSX.Element>} The rendered condition support page.
+ */
+export default async function ConditionPage({ params }: Props): Promise<JSX.Element> {
 	const { conditionId } = await params
 
 	const condition = conditions.find((c) => c.id === conditionId)
@@ -25,7 +37,6 @@ export default async function ConditionPage({ params }: Props) {
 					</CardTitle>
 				</CardHeader>
 				<CardContent className="pt-6 space-y-6">
-					{/* Some note or info */}
 					<div className="rounded-md bg-muted p-4">
 						<h3 className="text-sm font-semibold text-muted-foreground mb-2">What You'll Get</h3>
 						<p className="text-sm text-foreground">{conditionPrompts[condition.id]}</p>
@@ -33,7 +44,6 @@ export default async function ConditionPage({ params }: Props) {
 					<p className="text-muted-foreground text-sm">
 						Explore personalized support for {condition.name.toLowerCase()} with our tools.
 					</p>
-					{/* Buttons */}
 					<div className="flex flex-col gap-3">
 						<Link href={'/chat'}>
 							<Button

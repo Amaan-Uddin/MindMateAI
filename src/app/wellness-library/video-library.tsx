@@ -1,9 +1,17 @@
-import { getYoutubeVideos } from '@/actions/wellness-library-actions'
-import { VideoCards } from '@/components/wellness-library-components/video-cards'
 import { notFound } from 'next/navigation'
+import { JSX } from 'react'
 
-export async function VideoLibrary() {
-	// await new Promise((resolve) => setTimeout(resolve, 1000))
+import { VideoCards } from '@/components/wellness-library-components/video-cards'
+
+import { getYoutubeVideos } from '@/actions/wellness-library-actions'
+
+/**
+ * VideoLibrary component - fetches YouTube videos and renders them as a responsive grid of VideoCards.
+ * Redirects to notFound if no videos are available.
+ *
+ * @returns {Promise<JSX.Element>}
+ */
+export async function VideoLibrary(): Promise<JSX.Element> {
 	const videos = await getYoutubeVideos()
 	if (!videos || videos.length === 0) return notFound()
 	return (

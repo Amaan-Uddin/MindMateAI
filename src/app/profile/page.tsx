@@ -1,19 +1,26 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
-import { Suspense } from 'react'
+import { JSX, Suspense } from 'react'
 
-import ProfileContent from './profile-content'
+import { ProfileContent } from './profile-content'
 import { ProfileSkeleton } from '@/components/skeleton-loaders/profile-skeleton'
 
-export default async function ProfilePage() {
+/**
+ * ProfilePage component - renders ProfileContent with user details inside Suspense.
+ *
+ * @returns {Promise<JSX.Element>}
+ */
+export default async function ProfilePage(): Promise<JSX.Element> {
 	const supabase = await createClient()
+
 	const {
 		data: { user },
 		error: authError,
 	} = await supabase.auth.getUser()
 	if (authError || !user) {
-		redirect('/auth/login')
+		return redirect('/auth/login')
 	}
+
 	return (
 		<>
 			<Suspense fallback={<ProfileSkeleton />}>

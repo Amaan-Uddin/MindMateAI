@@ -1,5 +1,6 @@
-import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
+import { redirect } from 'next/navigation'
+import { JSX } from 'react'
 
 import { ConversationSidebar } from '@/components/chat-components/ConversationSidebar'
 
@@ -8,8 +9,17 @@ interface Props {
 	userId: string
 }
 
-export default async function Sidebar({ thread, userId }: Props) {
-	// await new Promise((resolve) => setTimeout(resolve, 10000))
+/**
+ * Sidebar component - fetches and displays current conversation threads.
+ * Redirects to dashboard if the provided thread ID is not found in the user's thread list.
+ *
+ * @param {Object} props - Component props.
+ * @param {number | null} props.thread - The currently selected thread ID, or null.
+ * @param {string} props.userId - The ID of the user whose threads should be fetched.
+ *
+ * @returns {Promise<JSX.Element>} The ConversationSidebar component with all user threads.
+ */
+export async function Sidebar({ thread, userId }: Props): Promise<JSX.Element> {
 	const supabase = await createClient()
 
 	const { data, error } = await supabase

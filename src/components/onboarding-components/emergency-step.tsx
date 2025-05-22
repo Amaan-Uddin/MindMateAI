@@ -1,11 +1,13 @@
 'use client'
 
+import { useRouter } from 'next/navigation'
+import { UseFormRegister, FieldErrors } from 'react-hook-form'
+import { JSX } from 'react'
+
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Button } from '@/components/ui/button'
-import { UseFormRegister, FieldErrors } from 'react-hook-form'
 import { ProfileFormValues } from '@/utils/validation/profileSchema'
-import { useRouter } from 'next/navigation'
 
 interface Props {
 	register: UseFormRegister<ProfileFormValues>
@@ -15,7 +17,20 @@ interface Props {
 	edit: string | null
 }
 
-export function EmergencyContactStep({ register, errors, router, isSubmitting, edit }: Props) {
+/**
+ * EmergencyContactStep component - renders the emergency contact form step with name and phone number inputs,
+ * shows validation errors, and provides navigation buttons for going back or submitting the form.
+ *
+ * @param {Object} props - Component props.
+ * @param {Function} props.register - React Hook Form register function for form inputs.
+ * @param {Object} props.errors - Validation errors object from React Hook Form.
+ * @param {import('next/router').NextRouter} props.router - Next.js router instance for navigation.
+ * @param {boolean} props.isSubmitting - Indicates if the form submission is in progress.
+ * @param {boolean} props.edit - Flag indicating if the form is in edit mode.
+ *
+ * @returns {JSX.Element} The emergency contact form step JSX element.
+ */
+export function EmergencyContactStep({ register, errors, router, isSubmitting, edit }: Props): JSX.Element {
 	return (
 		<div className="flex flex-col gap-6">
 			<div className="grid gap-2">

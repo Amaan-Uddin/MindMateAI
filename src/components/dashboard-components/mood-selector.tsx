@@ -1,12 +1,13 @@
 'use client'
 
-import { useState } from 'react'
 import Link from 'next/link'
-import { cn } from '@/lib/utils'
-import { handleMoodUpdate } from '@/actions/dashboard-actions'
+import { JSX, useState } from 'react'
 
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
+import { cn } from '@/lib/utils'
+
+import { updateMoodValue } from '@/actions/dashboard-actions'
 
 const moods = [
 	{ value: 'amazing', emoji: '😁', label: 'Amazing' },
@@ -16,7 +17,13 @@ const moods = [
 	{ value: 'angry', emoji: '😠', label: 'Angry' },
 ]
 
-export function MoodSelector() {
+/**
+ * MoodSelector component - lets users select and submit their current mood.
+ * After submission, shows a thank-you message with a link to start a chat.
+ *
+ * @returns {JSX.Element} The mood selection UI element.
+ */
+export function MoodSelector(): JSX.Element {
 	const [selectedMood, setSelectedMood] = useState<string | null>(null)
 	const [moodSubmitted, setMoodSubmitted] = useState(false)
 
@@ -27,7 +34,7 @@ export function MoodSelector() {
 	const handleMoodSubmit = async () => {
 		if (selectedMood) {
 			setMoodSubmitted(true)
-			await handleMoodUpdate(selectedMood)
+			await updateMoodValue(selectedMood)
 		}
 	}
 

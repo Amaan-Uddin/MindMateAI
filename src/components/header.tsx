@@ -1,8 +1,8 @@
+import { createClient } from '@/lib/supabase/server'
 import Link from 'next/link'
 
-import { ThemeToggle } from '@/components/theme-toggle'
 import { Button } from './ui/button'
-import { createClient } from '@/lib/supabase/server'
+import { ThemeToggle } from '@/components/theme-toggle'
 import { LogoutButton } from './auth-components/logout-button'
 import { NavLinks } from './nav-links'
 

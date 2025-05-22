@@ -1,15 +1,24 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
-import { DashboardMoodPicker } from './mood-picker'
 
-export default async function DashboardPage() {
+import { DashboardMoodPicker } from './mood-picker'
+import { JSX } from 'react'
+
+/**
+ * DashboardPage component - main dashboard page that checks user authentication and renders the mood picker.
+ * Redirects to login if the user is not authenticated.
+ *
+ * @returns {Promise<JSX.Element>} The dashboard page layout with mood picker.
+ */
+export default async function DashboardPage(): Promise<JSX.Element> {
 	const supabase = await createClient()
+
 	const {
 		data: { user },
 		error: authError,
 	} = await supabase.auth.getUser()
 	if (authError || !user) {
-		redirect('/auth/login')
+		return redirect('/auth/login')
 	}
 
 	return (

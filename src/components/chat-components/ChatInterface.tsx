@@ -1,21 +1,32 @@
 'use client'
 
+import { useEffect, useRef, useState, useOptimistic, useTransition, JSX } from 'react'
+import { useTheme } from 'next-themes'
+
 import { Button } from '@/components/ui/button'
 import { Textarea } from '../ui/textarea'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Send } from 'lucide-react'
 
-import { useTheme } from 'next-themes'
-import { useEffect, useRef, useState, useOptimistic, useTransition } from 'react'
-import { createMessage } from '@/actions/chat-actions'
 import type { Message } from '@/utils/types/messages-type'
+import { createMessage } from '@/actions/chat-actions'
 
 interface ChatInterfaceProps {
 	threadId: number
 	messages: Message[]
 }
 
-export function ChatInterface({ threadId, messages }: ChatInterfaceProps) {
+/**
+ * ChatInterface component - renders a chat UI for a given thread with messages.
+ * Supports optimistic UI updates for user messages and smooth auto-scrolling.
+ *
+ * @param {Object} props - Component props.
+ * @param {string} props.threadId - The ID of the chat thread.
+ * @param {Array<Message>} props.messages - Array of message objects to display.
+ *
+ * @returns {JSX.Element | null} The chat interface JSX element or null during SSR.
+ */
+export function ChatInterface({ threadId, messages }: ChatInterfaceProps): JSX.Element | null {
 	const [isMounted, setIsMounted] = useState(false)
 	const { theme } = useTheme()
 	const [isPending, startTransition] = useTransition()
@@ -103,7 +114,7 @@ export function ChatInterface({ threadId, messages }: ChatInterfaceProps) {
 
 						startTransition(async () => {
 							try {
-								await createMessage(userMessage, threadId, messages.length)
+								await createMessage(userMessage, threadId)
 							} catch (error) {
 								addOptimisticMessages('')
 								console.error('Failed to send message', error)

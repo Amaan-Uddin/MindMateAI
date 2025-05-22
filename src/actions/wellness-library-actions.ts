@@ -3,38 +3,40 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 
+/**
+ * fetches a list of recommended YouTube videos for the user based on their mental health conditions.
+ * @returns  {Promise<Array|null>} a list of video objects with id, title, video_id, and tags.
+ */
 export async function getYoutubeVideos() {
 	const supabase = await createClient()
 
+	// get current authenticated user
 	const {
 		data: { user },
 		error: authError,
 	} = await supabase.auth.getUser()
 	if (authError || !user) {
-		redirect('/auth/login?message=Unauthenicated user cannot access Wellness Library')
-		// TODO: add a toast notification
+		return redirect('/auth/login?message=Unauthenticated user cannot access Wellness Library')
 	}
 
-	const { data: SelectConditions, error: SelectError } = await supabase
+	// fetch all user conditions data
+	const { data: UserData, error: FetchError } = await supabase
 		.from('personal_info')
 		.select('conditions')
 		.eq('user_id', user.id)
 		.single()
-	if (SelectError) {
-		console.error('Error occurred while fetching user conditions', SelectError)
+	if (FetchError) {
+		console.error('Error occurred while fetching user conditions', FetchError)
 	}
-	if (!SelectConditions || SelectConditions.conditions.length === 0) {
-		redirect('/profile?message=User has no conditions, please select atleast one condition')
-		// TODO: add a toast notification
+	if (!UserData || UserData.conditions.length === 0) {
+		return redirect('/profile?message=User has no conditions, please select atleast one condition')
 	}
 
-	const { data, error } = await supabase
+	// fetch all Youtube videos related to the user's conditions
+	const { data } = await supabase
 		.from('youtube_videos')
 		.select('id,title,video_id,tags')
-		.overlaps('tags', SelectConditions.conditions!)
-	if (error) {
-		console.error('Error occurred while fetching user conditions', error)
-	}
+		.overlaps('tags', UserData.conditions!)
 
 	return data
 }

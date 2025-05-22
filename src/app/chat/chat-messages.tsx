@@ -1,6 +1,8 @@
 import { createClient } from '@/lib/supabase/server'
+import { JSX } from 'react'
 
 import { ChatInterface } from '@/components/chat-components/ChatInterface'
+
 import { updateThreadTitle } from '@/actions/chat-actions'
 
 interface Props {
@@ -8,8 +10,16 @@ interface Props {
 	userId: string
 }
 
-export default async function ChatMessages({ thread, userId }: Props) {
-	// await new Promise((resolve) => setTimeout(resolve, 10000))
+/**
+ * ChatMessages component - fetches and renders chat messages for a given thread and user.
+ *
+ * @param {Object} props - Component props.
+ * @param {number} props.thread - The ID of the chat thread.
+ * @param {string} props.userId - The ID of the user whose messages should be fetched.
+ *
+ * @returns {Promise<JSX.Element>} The ChatInterface component populated with messages.
+ */
+export async function ChatMessages({ thread, userId }: Props): Promise<JSX.Element> {
 	const supabase = await createClient()
 
 	const { data: MessageData, error: MessageError } = await supabase

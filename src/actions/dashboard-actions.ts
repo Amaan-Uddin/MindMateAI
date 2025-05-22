@@ -3,17 +3,24 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 
-export async function handleMoodUpdate(moodValue: string) {
+/**
+ * update mood column in user's profile
+ *
+ * @param {string} moodValue - 'amazing' | 'good' | 'okay' | 'sad' | 'angry'
+ */
+export async function updateMoodValue(moodValue: string) {
 	const supabase = await createClient()
 
+	// get the current authenticated user
 	const {
 		data: { user },
 		error: AuthError,
 	} = await supabase.auth.getUser()
 	if (AuthError || !user) {
-		redirect('/auth/login?message=Unauthenticated user')
+		return redirect('/auth/login?message=Unauthenticated user')
 	}
 
+	// update mood value in database
 	const { error: UpdateError } = await supabase
 		.from('personal_info')
 		.update({ mood: moodValue })

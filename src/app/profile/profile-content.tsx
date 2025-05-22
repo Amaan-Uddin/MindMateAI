@@ -1,11 +1,12 @@
+import { createClient } from '@/lib/supabase/server'
+import Link from 'next/link'
+import { redirect } from 'next/navigation'
+import { JSX } from 'react'
+
+import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Table, TableBody, TableCell, TableRow } from '@/components/ui/table'
 import { CalendarIcon, PhoneIcon, HeartPulse, User2Icon, Contact2Icon, Mail, SquarePen } from 'lucide-react'
-
-import { createClient } from '@/lib/supabase/server'
-import { Button } from '@/components/ui/button'
-import Link from 'next/link'
-import { redirect } from 'next/navigation'
 
 interface Props {
 	userId: string
@@ -13,8 +14,20 @@ interface Props {
 	email: string
 }
 
-export default async function ProfileContent({ userId, name, email }: Props) {
+/**
+ * ProfileContent component - fetches and displays personal and emergency contact information
+ * for the given user ID. Redirects to the profile setup page if no data is found.
+ *
+ * @param {Object} props - Component props.
+ * @param {string} props.userId - The ID of the user whose profile data is fetched.
+ * @param {string} props.name - The name of the user.
+ * @param {string} props.email - The email of the user.
+ *
+ * @returns {Promise<JSX.Element>} The profile content JSX element wrapped in a promise.
+ */
+export async function ProfileContent({ userId, name, email }: Props): Promise<JSX.Element> {
 	const supabase = await createClient()
+
 	const { data, error } = await supabase
 		.from('personal_info')
 		.select('age,conditions,emergency_name,emergency_phone_number,phone_number')
@@ -25,7 +38,7 @@ export default async function ProfileContent({ userId, name, email }: Props) {
 	}
 
 	if (!data) {
-		redirect('/get-started?page=profile')
+		return redirect('/get-started?page=profile')
 	}
 
 	return (

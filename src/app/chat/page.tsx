@@ -1,17 +1,30 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
-import { Suspense } from 'react'
+import { JSX, Suspense } from 'react'
 
-import Sidebar from './sidebar'
-import StartNewConversation from './start-new-conversation'
-import ChatMessages from './chat-messages'
+import { Sidebar } from './sidebar'
+import { ChatMessages } from './chat-messages'
+import { StartNewConversation } from './start-new-conversation'
+
 import { Button } from '@/components/ui/button'
 import { SidebarSkeleton } from '@/components/skeleton-loaders/sidebar-skeleton'
 import { ChatSkeleton } from '@/components/skeleton-loaders/chat-skeleton'
 
 import { createConversationThread } from '@/actions/chat-actions'
 
-export default async function ChatPage({ searchParams }: { searchParams: Promise<{ thread: string }> }) {
+/**
+ * ChatPage component - renders the main chat interface and sidebar thread collection.
+ *
+ * @param {Object} props - Component props.
+ * @param {Promise<{ thread: string }>} props.searchParams - Promise resolving to the search parameters from the URL, containing the thread ID.
+ *
+ * @returns {Promise<JSX.Element>} The rendered chat page.
+ */
+export default async function ChatPage({
+	searchParams,
+}: {
+	searchParams: Promise<{ thread: string }>
+}): Promise<JSX.Element> {
 	const { thread } = await searchParams
 
 	const supabase = await createClient()
@@ -20,7 +33,7 @@ export default async function ChatPage({ searchParams }: { searchParams: Promise
 		error: authError,
 	} = await supabase.auth.getUser()
 	if (authError || !user) {
-		redirect('/auth/login')
+		return redirect('/auth/login')
 	}
 
 	return (

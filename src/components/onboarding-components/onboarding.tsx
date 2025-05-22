@@ -1,20 +1,34 @@
 'use client'
+import { createClient } from '@/lib/supabase/client'
+import { useRouter, useSearchParams } from 'next/navigation'
+import { useForm, SubmitHandler } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { JSX, useEffect, useState } from 'react'
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { EmergencyContactStep } from './emergency-step'
 import { ProfileStep } from './profile-step'
+import { EmergencyContactStep } from './emergency-step'
 import { OnboardingSkeleton } from '../skeleton-loaders/onboarding-skeleton'
+
+import { profileSchema, ProfileFormValues } from '@/utils/validation/profileSchema'
 import { createUserProfile, updateUserProfile } from '@/actions/profile-actions'
 
-import { useEffect, useState } from 'react'
-import { useForm, SubmitHandler } from 'react-hook-form'
-import { useRouter, useSearchParams } from 'next/navigation'
-import { createClient } from '@/lib/supabase/client'
-
-import { zodResolver } from '@hookform/resolvers/zod'
-import { profileSchema, ProfileFormValues } from '@/utils/validation/profileSchema'
-
-export function OnboardingForm() {
+/**
+ * OnboardingForm component handles the multi-step user onboarding flow.
+ *
+ * It supports two steps:
+ *  - Profile: Collects user's age, phone number, and health conditions.
+ *  - Emergency Contact: Collects emergency contact name and number.
+ *
+ * The current step is determined by the `page` query parameter.
+ * The form supports an "edit" mode (via `edit=true` query param), which loads existing user data for update.
+ * Redirects unauthenticated users to the login page.
+ * Redirects users to `/profile` if profile already exists and not in edit mode.
+ *
+ * @component
+ * @returns {JSX.Element} The onboarding form UI.
+ */
+export function OnboardingForm(): JSX.Element {
 	const router = useRouter()
 	const searchParams = useSearchParams()
 	const page = searchParams.get('page') || 'profile'
@@ -44,11 +58,10 @@ export function OnboardingForm() {
 		router.push('/dashboard')
 	}
 
+	// useEffect to populate form fields
 	useEffect(() => {
 		if (edit !== 'true') return
 		const fetchProfile = async () => {
-			// setLoadingProfile(true)
-
 			const supabase = createClient()
 			const {
 				data: { user },
@@ -84,6 +97,7 @@ export function OnboardingForm() {
 		fetchProfile()
 	}, [edit, setValue])
 
+	// useEffect to check if user profile already exist
 	useEffect(() => {
 		if (!edit && page) {
 			const checkProfile = async () => {
@@ -98,11 +112,11 @@ export function OnboardingForm() {
 					setLoadingProfile(false)
 					router.replace('/auth/login?message=User not authenticated')
 				}
+
 				const { data } = await supabase.from('personal_info').select('id').eq('user_id', user!.id).single()
 				if (data) {
 					console.log('User profile already exists, redirecting to /profile')
 					router.push('/profile')
-					return
 				}
 				setLoadingProfile(false)
 			}

@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import Image from 'next/image'
+import { JSX } from 'react'
 
 interface VideCardProps {
 	data: {
@@ -10,7 +11,21 @@ interface VideCardProps {
 	}
 }
 
-export function VideoCards({ data }: VideCardProps) {
+/**
+ * VideoCards component renders a clickable card linking to a YouTube video.
+ *
+ * Each card shows the video thumbnail, title, and optional tags.
+ * Clicking the card opens the video in a new tab.
+ *
+ * @param {Object} props - Component props.
+ * @param {VideCardProps['data']} props.data - Data object containing video details.
+ * @param {string} props.data.video_id - YouTube video ID.
+ * @param {string} props.data.title - Title of the video.
+ * @param {string[]} [props.data.tags] - Optional list of tags related to the video.
+ *
+ * @returns {JSX.Element} A clickable video card.
+ */
+export function VideoCards({ data }: VideCardProps): JSX.Element {
 	return (
 		<Link
 			href={`https://www.youtube.com/watch?v=${data.video_id}`}

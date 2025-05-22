@@ -1,13 +1,14 @@
 'use client'
 
 import Link from 'next/link'
-import { useOptimistic } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { deleteConversationThread } from '@/actions/chat-actions'
+import { JSX, useOptimistic } from 'react'
 
 import { Button } from '@/components/ui/button'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Trash } from 'lucide-react'
+
+import { deleteConversationThread } from '@/actions/chat-actions'
 
 interface ConversationSidebarProps {
 	allThreads: {
@@ -16,7 +17,16 @@ interface ConversationSidebarProps {
 	}[]
 }
 
-export function ConversationSidebar({ allThreads }: ConversationSidebarProps) {
+/**
+ * ConversationSidebar component - displays a list of current conversation threads.
+ * Allows optimistic deletion of threads and handles navigation when the current thread is deleted.
+ *
+ * @param {Object} props - Component props.
+ * @param {Array<Thread>} props.allThreads - Array of all conversation threads.
+ *
+ * @returns {JSX.Element} The sidebar JSX element showing conversation threads.
+ */
+export function ConversationSidebar({ allThreads }: ConversationSidebarProps): JSX.Element {
 	const router = useRouter()
 	const searchParams = useSearchParams()
 	const currentThread = parseInt(searchParams.get('thread') || '') // using the current thread to indicate whether we should navigate to /chat or stay on current route if the thread being deleted is not the current thread

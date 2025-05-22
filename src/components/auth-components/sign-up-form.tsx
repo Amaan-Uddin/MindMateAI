@@ -1,19 +1,35 @@
 'use client'
 
-import { cn } from '@/lib/utils'
 import Link from 'next/link'
-
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-
 import { useForm, SubmitHandler } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { JSX } from 'react'
+
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { cn } from '@/lib/utils'
+
 import { signupSchema, SignupFormValues } from '@/utils/validation/authSchema'
 import { signup } from '@/actions/auth-actions'
 
-export function SignUpForm({ className, ...props }: React.ComponentPropsWithoutRef<'div'>) {
+/**
+ * SignUpForm renders a user registration form for creating a new account.
+ *
+ * It uses React Hook Form with Zod schema validation (`signupSchema`)
+ * and submits the data using the `signup` function.
+ *
+ * The form includes input fields for:
+ * - Full name
+ * - Email
+ * - Password
+ *
+ * @param {Object} props - React component props extended from a <div> element.
+ * @param {string} [props.className] - Optional Tailwind CSS class for outermost wrapper.
+ * @returns {JSX.Element} The rendered signup form component.
+ */
+export function SignUpForm({ className, ...props }: React.ComponentPropsWithoutRef<'div'>): JSX.Element {
 	const {
 		register,
 		handleSubmit,

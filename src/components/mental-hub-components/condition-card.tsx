@@ -1,8 +1,20 @@
-import { Condition } from '@/utils/types/mental-hub-types'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import Link from 'next/link'
+import { JSX } from 'react'
 
-export function ConditionCard({ condition }: { condition: Condition }) {
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+
+import { Condition } from '@/utils/types/mental-hub-types'
+
+/**
+ * ConditionCard component - displays a mental health condition with icon, name, and description.
+ * Links to the detailed condition page.
+ *
+ * @param {Object} props - Component props.
+ * @param {Condition} props.condition - The mental health condition data.
+ *
+ * @returns {JSX.Element} The condition card element.
+ */
+export function ConditionCard({ condition }: { condition: Condition }): JSX.Element {
 	return (
 		<Link href={`/mental-hub/${condition.id}`} className="h-full">
 			<Card className="h-full flex flex-col justify-between hover:shadow-md transition-shadow gap-2">

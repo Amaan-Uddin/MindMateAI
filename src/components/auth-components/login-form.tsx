@@ -1,26 +1,36 @@
 'use client'
 
-import { cn } from '@/lib/utils'
 import Link from 'next/link'
-
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-
 import { useForm, SubmitHandler } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { JSX, useEffect } from 'react'
+
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { toast } from 'sonner'
+import { cn } from '@/lib/utils'
+
 import { loginSchema, LoginFormValues } from '@/utils/validation/authSchema'
 import { login } from '@/actions/auth-actions'
-import { toast } from 'sonner'
-
-import { useEffect } from 'react'
 
 type LoginFormProps = React.ComponentPropsWithoutRef<'div'> & {
 	ErrorMessage?: string
 }
 
-export function LoginForm({ className, ErrorMessage, ...props }: LoginFormProps) {
+/**
+ * LoginForm renders a user login interface with email and password fields.
+ *
+ * It uses React Hook Form integrated with Zod schema validation (`loginSchema`)
+ * and submits the form data using the `login` function.
+ *
+ * @param {Object} props - Props for the LoginForm component.
+ * @param {string} [props.className] - Optional Tailwind CSS class for styling the container.
+ * @param {string} [props.ErrorMessage] - Optional error message to display via toast notification.
+ * @returns {JSX.Element} The rendered login form component.
+ */
+export function LoginForm({ className, ErrorMessage, ...props }: LoginFormProps): JSX.Element {
 	const {
 		register,
 		handleSubmit,

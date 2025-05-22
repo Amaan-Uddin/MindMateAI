@@ -1,11 +1,14 @@
 'use client'
 
+import { useRouter } from 'next/navigation'
+import { UseFormRegister, FieldErrors } from 'react-hook-form'
+import { JSX } from 'react'
+
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Button } from '@/components/ui/button'
-import { UseFormRegister, FieldErrors } from 'react-hook-form'
+
 import { ProfileFormValues } from '@/utils/validation/profileSchema'
-import { useRouter } from 'next/navigation'
 
 const conditionsList = ['Anxiety', 'Depression', 'Stress', 'Bipolar', 'ADHD', 'PTSD', 'OCD', 'Insomnia', 'Paranoia']
 
@@ -16,7 +19,19 @@ interface Props {
 	edit: string | null
 }
 
-export function ProfileStep({ register, errors, router, edit }: Props) {
+/**
+ * ProfileStep component - renders a user profile form which includes age, phone number, and health conditions.
+ * Displays validation errors and handles navigation to the next step.
+ *
+ * @param {Object} props - Component props.
+ * @param {Function} props.register - React Hook Form register function for form inputs.
+ * @param {Object} props.errors - Validation errors object from React Hook Form.
+ * @param {import('next/router').NextRouter} props.router - Next.js router instance for navigation.
+ * @param {boolean} props.edit - Flag indicating if the form is in edit mode.
+ *
+ * @returns {JSX.Element} The profile step form JSX element.
+ */
+export function ProfileStep({ register, errors, router, edit }: Props): JSX.Element {
 	return (
 		<div className="flex flex-col gap-6">
 			<div className="grid gap-2">
