@@ -43,7 +43,7 @@ export function MoodSelector(): JSX.Element {
 			<CardContent className="p-0">
 				{!moodSubmitted ? (
 					<>
-						<div className="grid grid-cols-2 sm:grid-cols-5 gap-4 mb-6">
+						<div className="grid grid-cols-1 sm:grid-cols-5 gap-4 mb-6">
 							{moods.map((mood) => (
 								<button
 									key={mood.value}
@@ -76,7 +76,7 @@ export function MoodSelector(): JSX.Element {
 							href="/chat"
 							className="inline-block mt-6 text-sm underline text-primary hover:text-primary/80 transition"
 						>
-							Talk to MindMate about how you're feeling
+							Talk to MindMate about how you&apos;re feeling
 						</Link>
 					</div>
 				)}

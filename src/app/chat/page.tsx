@@ -2,7 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import { JSX, Suspense } from 'react'
 
-import { Sidebar } from './sidebar'
+import { SidebarComponent } from './sidebar'
 import { ChatMessages } from './chat-messages'
 import { StartNewConversation } from './start-new-conversation'
 
@@ -43,13 +43,13 @@ export default async function ChatPage({
 					New Chat
 				</Button>
 				<Suspense fallback={<SidebarSkeleton />}>
-					<Sidebar thread={parseInt(thread)} userId={user.id} />
+					<SidebarComponent thread={parseInt(thread)} userId={user.id} />
 				</Suspense>
 			</div>
 			<main className="flex-1 p-4 overflow-hidden">
 				{thread ? (
 					<Suspense fallback={<ChatSkeleton />}>
-						<ChatMessages thread={parseInt(thread)} userId={user.id} />
+						<ChatMessages thread={parseInt(thread)} />
 					</Suspense>
 				) : (
 					<StartNewConversation />

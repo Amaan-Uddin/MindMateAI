@@ -19,7 +19,7 @@ interface Props {
  *
  * @returns {Promise<JSX.Element>} The ConversationSidebar component with all user threads.
  */
-export async function Sidebar({ thread, userId }: Props): Promise<JSX.Element> {
+export async function SidebarComponent({ thread, userId }: Props): Promise<JSX.Element> {
 	const supabase = await createClient()
 
 	const { data, error } = await supabase

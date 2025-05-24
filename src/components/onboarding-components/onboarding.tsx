@@ -95,7 +95,7 @@ export function OnboardingForm(): JSX.Element {
 		}
 
 		fetchProfile()
-	}, [edit, setValue])
+	}, [edit, setValue, router])
 
 	// useEffect to check if user profile already exist
 	useEffect(() => {
@@ -122,7 +122,7 @@ export function OnboardingForm(): JSX.Element {
 			}
 			checkProfile()
 		}
-	}, [page, edit])
+	}, [page, edit, router])
 
 	useEffect(() => {
 		if (!searchParams.get('page')) {

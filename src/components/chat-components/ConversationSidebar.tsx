@@ -38,14 +38,14 @@ export function ConversationSidebar({ allThreads }: ConversationSidebarProps): J
 		<div>
 			<h2 className="text-lg font-medium mb-4">Past Conversations</h2>
 			<ScrollArea className="h-[calc(100vh-160px)] pr-2 space-y-2">
-				{optimisticThreads.map((thread, index) => (
+				{optimisticThreads.map((thread) => (
 					<div key={thread.id} className="flex justify-between items-center">
 						<Link
 							href={`/chat?thread=${thread.id}`}
 							className="w-full flex flex-col items-start text-left truncate"
 						>
 							<span className="font-medium truncate w-full">
-								{thread.thread_title !== null ? thread.thread_title : `New conversation ${index}`}
+								{thread.thread_title !== null ? thread.thread_title : `New conversation`}
 							</span>
 						</Link>
 						<form

@@ -23,11 +23,11 @@ export async function DashboardMoodPicker({ userId }: MoodPickerProps): Promise<
 	if (data?.mood) return null
 
 	return (
-		<div>
+		<section>
 			<header className="mb-4">
 				<h1 className="text-[28px] font-bold">How are you feeling today?</h1>
 			</header>
 			<MoodSelector />
-		</div>
+		</section>
 	)
 }

@@ -1,4 +1,4 @@
-import { HumanMessage, RemoveMessage } from '@langchain/core/messages'
+import { HumanMessage } from '@langchain/core/messages'
 import { MessagesAnnotation, StateGraph, START, END, Annotation } from '@langchain/langgraph'
 import { PostgresSaver } from '@langchain/langgraph-checkpoint-postgres'
 import { v4 as uuidv4 } from 'uuid'
@@ -31,7 +31,7 @@ async function callModel(state: typeof GraphAnnotation.State): Promise<Partial<t
 	 * Partial<typeof GraphAnnotation.State> means this return value only needs to include
 	 * some properties of the full state (in this case, just messages).
 	 */
-	let { messages } = state
+	const { messages } = state
 	const response = await model.invoke(messages)
 
 	// We return an object, because this will get added to the existing state
@@ -43,7 +43,7 @@ function shouldContinue(state: typeof GraphAnnotation.State): 'summarize_convers
 	const messages = state.messages
 
 	// If there are more than more than or equal to 9 messages, then we summarize the conversation
-	if (messages.length >= 9) {
+	if (messages.length % 10 == 9) {
 		return 'summarize_conversation'
 	}
 
@@ -60,34 +60,65 @@ async function summarizeConversation(
 	let summaryMessage: string
 	if (summary) {
 		summaryMessage = `
-		This is the summary of the conversation to date:
-		${summary}
-		
-		Extend the summary by taking into account the new messages above. Extract only the most therapeutically relevant information.
-		
-		Focus on:
-		- Emotional themes (e.g., sadness, anxiety, hopelessness)
-		- Stressors or triggers mentioned
-		- Coping strategies used or considered
-		- Notable thought patterns or beliefs
-		- Any signs of improvement or emotional breakthroughs
-		- Any red flags or safety concerns
-		
-		Avoid small talk or repetition. Keep it concise and suitable for guiding future therapy sessions.
+			You are an expert mental health assistant. Your task is to read new messages from an ongoing conversation and extend the previous summary with only meaningful and clinically relevant information.
+
+			You are given:
+			- A prior summary of the user’s condition and observations from earlier messages.
+			- A new transcript of messages from the same user.
+
+			Your goal is to add to the existing summary — not rewrite it — by observing:
+			- New emotional expressions or intensifications.
+			- Emerging patterns or behavioral changes.
+			- Signs of progress or relapse.
+			- Mention of new coping strategies, routines, or setbacks.
+			- Any changes in mood, cognition, or functionality.
+
+			Maintain the same bullet-point structure, use neutral clinical language, and only add new insights not already captured.
+
+			Example Input:
+			Previous Summary:
+			[Mood] User expressed feelings of hopelessness.
+			[Behavior] Reported sleeping 10+ hours and skipping meals.
+			[Coping] Tried journaling with mixed results.
+
+			New Messages:
+			(Insert new message transcript here)
+
+			Example Output:
+			[Mood] User mentioned increased irritability and emotional numbness.
+			[Function] Difficulty focusing at work has worsened over the past few days.
+			[Progress] Started attending a weekly support group, felt a bit more connected.
+
+			Previous Summary:
+			${summary}
 		`
 	} else {
 		summaryMessage = `
-		Please create a concise and structured summary of the key therapeutic information shared in the conversation above.
-		
-		Focus on:
-		- Emotional themes (e.g., sadness, anxiety, hopelessness)
-		- Stressors or triggers mentioned
-		- Coping strategies used or considered
-		- Notable thought patterns or beliefs
-		- Any signs of improvement or emotional breakthroughs
-		- Any red flags or safety concerns
-		
-		Avoid small talk or repetition. Keep it concise and suitable for guiding future therapy sessions.
+			You are an expert mental health assistant analyzing a text conversation between a user and a mental health chatbot.  
+			The user is known to be experiencing specific mental health conditions (e.g., ADHD, PTSD, Depression, Anxiety, etc.), but you do not need to speculate on their diagnosis — only analyze the content for clinically relevant observations.
+
+			Your task is to generate a concise summary of all statements, patterns, or indicators that are meaningful from a therapeutic or diagnostic perspective. Focus on identifying:
+
+			- Emotional expressions (e.g., guilt, sadness, anger, detachment)
+			- Cognitive distortions (e.g., catastrophizing, all-or-nothing thinking)
+			- Behavioral symptoms (e.g., withdrawal, avoidance, impulsivity)
+			- Functional impairments (e.g., sleep, concentration, relationships, work/school)
+			- Progress or setbacks (e.g., better emotional regulation, increased panic attacks)
+			- Mention of coping strategies (effective or ineffective)
+			- External triggers or life events influencing mental health
+
+			Format your summary as a structured bullet-point list, tagging insights where possible. Use neutral, clinical language. Do not include personal opinions or advice.
+
+			Example Output:
+			[Mood] User expressed persistent feelings of failure and hopelessness.
+			[Cognition] Mentioned intrusive thoughts interfering with daily concentration.
+			[Behavior] Reported staying in bed most of the day and avoiding calls from friends.
+			[Progress] Tried journaling for anxiety and noted slight improvement in clarity.
+			[Trigger] Argument with a sibling led to a spike in emotional reactivity.
+			[Setback] Resumed self-isolating after a brief period of engagement.
+
+			Conversation Transcript:
+			(Insert raw transcript of the conversation here)
 		`
 	}
 
@@ -98,17 +129,18 @@ async function summarizeConversation(
 			content: summaryMessage,
 		}),
 	]
-	const response = await model.invoke(allMessages)
 
-	// We now need to delete messages that we no longer want to show up
-	// I will delete all but the last two messages, but you can change this
-	const deleteMessages = messages.slice(1, -2).map((m) => new RemoveMessage({ id: String(m.id) }))
+	const response = await model.invoke(allMessages)
 
 	if (typeof response.content !== 'string') {
 		throw new Error('Expected a string response from the model')
 	}
 
-	return { summary: response.content, messages: deleteMessages, update: true }
+	return {
+		summary: response.content,
+		messages: messages,
+		update: true,
+	}
 }
 
 // Define a new graph

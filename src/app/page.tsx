@@ -37,8 +37,8 @@ export default function LandingPage() {
 				</Card>
 
 				<p className="text-sm text-muted-foreground">
-					MindMate AI is not a replacement for professional mental health services. If you're experiencing a
-					crisis, please contact emergency services or a mental health professional.
+					MindMate AI is not a replacement for professional mental health services. If you&apos;re
+					experiencing a crisis, please contact emergency services or a mental health professional.
 				</p>
 			</div>
 		</div>

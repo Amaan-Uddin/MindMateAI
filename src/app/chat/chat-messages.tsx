@@ -7,7 +7,6 @@ import { updateThreadTitle } from '@/actions/chat-actions'
 
 interface Props {
 	thread: number
-	userId: string
 }
 
 /**
@@ -19,13 +18,12 @@ interface Props {
  *
  * @returns {Promise<JSX.Element>} The ChatInterface component populated with messages.
  */
-export async function ChatMessages({ thread, userId }: Props): Promise<JSX.Element> {
+export async function ChatMessages({ thread }: Props): Promise<JSX.Element> {
 	const supabase = await createClient()
 
 	const { data: MessageData, error: MessageError } = await supabase
 		.from('messages')
 		.select('id,content,role')
-		.eq('user_id', userId)
 		.eq('thread_id', thread)
 		.order('id', { ascending: true })
 	if (MessageError || !MessageData) {
@@ -34,7 +32,7 @@ export async function ChatMessages({ thread, userId }: Props): Promise<JSX.Eleme
 
 	const messageLength = MessageData!.length
 
-	if (messageLength == 9) {
+	if (messageLength == 7) {
 		const parsedMessages = JSON.stringify(MessageData)
 		await updateThreadTitle(thread, parsedMessages)
 	}

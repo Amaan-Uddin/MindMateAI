@@ -38,7 +38,7 @@ export default async function ConditionPage({ params }: Props): Promise<JSX.Elem
 				</CardHeader>
 				<CardContent className="pt-6 space-y-6">
 					<div className="rounded-md bg-muted p-4">
-						<h3 className="text-sm font-semibold text-muted-foreground mb-2">What You'll Get</h3>
+						<h3 className="text-sm font-semibold text-muted-foreground mb-2">What You&apos;ll Get</h3>
 						<p className="text-sm text-foreground">{conditionPrompts[condition.id]}</p>
 					</div>
 					<p className="text-muted-foreground text-sm">

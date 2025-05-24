@@ -4,7 +4,7 @@ import { createClient } from '@/lib/supabase/server'
 
 import { SystemMessage, HumanMessage } from '@langchain/core/messages'
 import { app } from '@/utils/ai/app'
-import { model } from '@/utils/ai/llm'
+import { fastModel } from '@/utils/ai/llm'
 
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
@@ -29,14 +29,11 @@ export async function createMessage(userMessage: string, threadId: number) {
 		return redirect('/auth/login?message=Unauthenticated user cannot create messages')
 	}
 
-	// fetch users summary to provide context for the model
-	const { data: Profile } = await supabase.from('personal_info').select('summary').eq('user_id', user.id).single()
-
 	const input = new HumanMessage({ content: userMessage })
 	const config = { configurable: { thread_id: threadId } }
 
 	// invoke the model
-	const response = await app.invoke({ messages: [input], summary: Profile?.summary, update: false }, config)
+	const response = await app.invoke({ messages: [input], update: false }, config)
 	const assistantMessage = response.messages[response.messages.length - 1].content // extracting the latest AIMessage
 
 	// the `update` attribute in our LangGraph's State tracks whether the `summary` attribute was updated, it holds a boolean value
@@ -79,23 +76,19 @@ export async function createConversationThread() {
 		return redirect('/auth/login?message=Unauthenticated user cannot create thread')
 	}
 
-	// insert new thread record
-	const { data: Thread, error: InsertError } = await supabase
-		.from('threads')
-		.insert({ user_id: user.id })
-		.select('id')
-		.single()
+	// inserting new thread record and fetching user profile for providing context to the model
+	const [{ data: Thread, error: InsertError }, { data: Profile }] = await Promise.all([
+		supabase.from('threads').insert({ user_id: user.id }).select('id').single(),
+		supabase
+			.from('personal_info')
+			.select('conditions,age,emergency_name,emergency_phone_number,summary,mood')
+			.eq('user_id', user.id)
+			.single(),
+	])
 	if (InsertError || !Thread) {
 		console.error('Error creating thread:', InsertError)
 		return redirect('/chat?error=Failed to create a new conversation thread')
 	}
-
-	// fetch user profile for providing context to the model
-	const { data: Profile } = await supabase
-		.from('personal_info')
-		.select('conditions,age,emergency_name,emergency_phone_number,summary,mood')
-		.eq('user_id', user.id)
-		.single()
 
 	// system prompt to set assistant behavior and user context
 	const systemMessage = new SystemMessage({
@@ -135,7 +128,7 @@ export async function createConversationThread() {
 	const config = { configurable: { thread_id: Thread.id } }
 
 	// invoke the model
-	const response = await app.invoke({ messages: [systemMessage, greetMessage] }, config)
+	const response = await app.invoke({ messages: [systemMessage, greetMessage], summary: Profile?.summary }, config)
 	const assistantMessage = response.messages[response.messages.length - 1].content
 
 	// save the assistant message to database
@@ -212,7 +205,7 @@ export async function updateThreadTitle(threadId: number, parsedMessages: string
 	})
 
 	// invoke the model with the system prompt
-	const response = await model.invoke([systemMessage])
+	const response = await fastModel.invoke([systemMessage])
 
 	// update the thread title in database
 	const { error: UpdateError } = await supabase

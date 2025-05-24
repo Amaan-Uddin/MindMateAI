@@ -1,8 +1,10 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
-
-import { DashboardMoodPicker } from './mood-picker'
 import { JSX } from 'react'
+
+import { DashboardMoodPicker } from './dashboard-mood-picker'
+import { DashboardFooter } from './dashboard-footer'
+import { DashboardWellnessLibrary } from './dashboard-wellness-library'
 
 /**
  * DashboardPage component - main dashboard page that checks user authentication and renders the mood picker.
@@ -23,8 +25,14 @@ export default async function DashboardPage(): Promise<JSX.Element> {
 
 	return (
 		<div className="min-h-screen bg-background p-4 sm:p-6">
-			<div className="max-w-4xl mx-auto">
+			<div className="max-w-4xl mx-auto  mt-6 mb-12">
 				<DashboardMoodPicker userId={user.id} />
+			</div>
+			<div className="max-w-4xl mx-auto my-24">
+				<DashboardWellnessLibrary />
+			</div>
+			<div className="max-w-4xl mx-auto my-24">
+				<DashboardFooter />
 			</div>
 		</div>
 	)
