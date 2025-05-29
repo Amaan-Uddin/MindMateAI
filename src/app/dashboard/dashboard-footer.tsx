@@ -1,4 +1,3 @@
-import Link from 'next/link'
 import { JSX } from 'react'
 
 import { Button } from '@/components/ui/button'
