@@ -6,14 +6,15 @@ import Link from 'next/link'
 import { Button } from './ui/button'
 import { cn } from '@/lib/utils'
 
-export function NavLinks() {
+export function NavLinks({ className, handleClick }: { className?: string; handleClick?: () => void }) {
 	const pathname = usePathname()
 
 	return (
-		<ul className="flex gap-5 text-sm font-medium">
+		<ul className={`gap-5 text-sm font-medium ${className}`}>
 			<li>
 				<Link href="/dashboard">
 					<Button
+						onClick={handleClick}
 						variant="link"
 						className={cn(
 							'text-accent-foreground decoration-primary',
@@ -27,6 +28,7 @@ export function NavLinks() {
 			<li>
 				<Link href="/chat">
 					<Button
+						onClick={handleClick}
 						variant="link"
 						className={cn(
 							'text-accent-foreground decoration-primary',
@@ -40,6 +42,7 @@ export function NavLinks() {
 			<li>
 				<Link href="/mental-hub">
 					<Button
+						onClick={handleClick}
 						variant="link"
 						className={cn(
 							'text-accent-foreground decoration-primary',
@@ -53,6 +56,7 @@ export function NavLinks() {
 			<li>
 				<Link href="/wellness-library">
 					<Button
+						onClick={handleClick}
 						variant="link"
 						className={cn(
 							'text-accent-foreground decoration-primary',

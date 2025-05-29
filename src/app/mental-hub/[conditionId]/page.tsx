@@ -28,7 +28,7 @@ export default async function ConditionPage({ params }: Props): Promise<JSX.Elem
 	if (!condition) notFound()
 
 	return (
-		<div className="bg-background flex items-center justify-center p-4 sm:p-6 ">
+		<div className="bg-background flex items-center justify-center px-4 py-6 sm:px-6 ">
 			<Card className="w-full max-w-lg gap-2">
 				<CardHeader className="border-b border-border">
 					<CardTitle className="flex items-center gap-3 text-2xl font-bold">

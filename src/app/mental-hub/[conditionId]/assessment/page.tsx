@@ -25,7 +25,7 @@ export default async function AssessmentPage({ params }: Props): Promise<JSX.Ele
 	if (!condition) notFound()
 
 	return (
-		<div className="bg-background flex [flex items-center justify-center p-4 sm:p-6">
+		<div className="bg-background flex items-center justify-center px-4 py-6 sm:px-6">
 			<Assessment condition={condition} questions={assessmentQuestions[condition.id]} />
 		</div>
 	)

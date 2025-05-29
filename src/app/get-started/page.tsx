@@ -21,8 +21,8 @@ export default async function GetStartedPage(): Promise<JSX.Element> {
 	}
 
 	return (
-		<div className="flex min-h-svh w-full justify-center p-6 md:p-10">
-			<div className="w-full max-w-2xl">
+		<div className="flex min-h-screen w-full justify-center">
+			<div className="w-full max-w-2xl mx-auto">
 				<OnboardingForm />
 			</div>
 		</div>

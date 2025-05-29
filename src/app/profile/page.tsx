@@ -22,10 +22,10 @@ export default async function ProfilePage(): Promise<JSX.Element> {
 	}
 
 	return (
-		<>
+		<div className="min-h-screen px-2 py-6 sm:px-6">
 			<Suspense fallback={<ProfileSkeleton />}>
 				<ProfileContent userId={user.id} name={user.user_metadata.name} email={user.email!} />
 			</Suspense>
-		</>
+		</div>
 	)
 }

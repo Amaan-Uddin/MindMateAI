@@ -58,7 +58,7 @@ export function ProfileStep({ register, errors, router, edit }: Props): JSX.Elem
 			</div>
 			<div className="grid gap-2">
 				<Label>Do you have any of these conditions?</Label>
-				<div className="grid grid-cols-2 gap-2">
+				<div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
 					{conditionsList.map((condition) => (
 						<div key={condition} className="flex items-center">
 							<Input

@@ -1,10 +1,12 @@
 import { Button } from '@/components/ui/button'
 import { logout } from '@/actions/auth-actions'
 
-export function LogoutButton() {
+export function LogoutButton({ className, handleClick }: { className?: string; handleClick?: () => void }) {
 	return (
 		<form action={logout}>
-			<Button>Logout</Button>
+			<Button onClick={handleClick} className={className}>
+				Logout
+			</Button>
 		</form>
 	)
 }

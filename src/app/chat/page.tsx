@@ -37,7 +37,7 @@ export default async function ChatPage({
 	}
 
 	return (
-		<div className="flex h-screen">
+		<div className="flex min-h-screen py-6 mx-auto container">
 			<div className="w-64 border-r h-full p-4">
 				<Button className="w-full mb-4" variant="outline" onClick={createConversationThread}>
 					New Chat

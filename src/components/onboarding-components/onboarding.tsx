@@ -135,7 +135,7 @@ export function OnboardingForm(): JSX.Element {
 	}
 
 	return (
-		<div className="flex justify-center p-4 sm:p-6">
+		<div className="flex justify-center px-2 py-6 sm:p-6">
 			<Card key={page} className="w-full mx-auto">
 				<CardHeader>
 					<CardTitle className="text-3xl font-bold">

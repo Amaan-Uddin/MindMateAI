@@ -23,7 +23,7 @@ export default async function WellnessLibraryPage(): Promise<JSX.Element> {
 	}
 
 	return (
-		<div className="min-h-screen bg-background p-4 sm:p-6">
+		<div className="min-h-screen bg-background px-4 py-6 sm:px-6">
 			<div className="max-w-4xl mx-auto">
 				<header className="mb-8">
 					<h1 className="text-3xl font-bold text-primary">Wellness Library</h1>

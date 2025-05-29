@@ -43,7 +43,7 @@ export function MoodSelector(): JSX.Element {
 			<CardContent className="p-0">
 				{!moodSubmitted ? (
 					<>
-						<div className="grid grid-cols-1 sm:grid-cols-5 gap-4 mb-6">
+						<div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-5 gap-4 mb-6">
 							{moods.map((mood) => (
 								<button
 									key={mood.value}
