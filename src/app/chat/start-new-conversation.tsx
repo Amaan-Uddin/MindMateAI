@@ -1,10 +1,10 @@
 'use client'
-import { JSX, useState } from 'react'
+import { JSX } from 'react'
 
 import { Button } from '@/components/ui/button'
 import { MessageCircle } from 'lucide-react'
 
-import { createConversationThread } from '@/actions/chat-actions'
+import { useCreateThread } from '@/hooks/useCreateThread'
 
 /**
  * StartNewConversation component - renders a button to initiate a new conversation thread.
@@ -13,13 +13,7 @@ import { createConversationThread } from '@/actions/chat-actions'
  * @returns {JSX.Element} A button element to start a new conversation.
  */
 export function StartNewConversation(): JSX.Element {
-	const [isLoading, setIsLoading] = useState(false)
-
-	const handleCreateThread = async () => {
-		setIsLoading(true)
-		await createConversationThread()
-		setIsLoading(false)
-	}
+	const { isLoading, handleCreateThread } = useCreateThread()
 
 	return (
 		<Button onClick={handleCreateThread} disabled={isLoading}>

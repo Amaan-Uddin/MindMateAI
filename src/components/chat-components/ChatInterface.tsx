@@ -73,8 +73,8 @@ export function ChatInterface({ threadId, messages }: ChatInterfaceProps): JSX.E
 
 	return (
 		<div className="flex flex-col h-[calc(100vh-4rem)] w-full max-w-3xl mx-auto">
-			<ScrollArea className="flex-1 p-4 overflow-y-auto" ref={scrollAreaRef}>
-				<div className="w-full flex justify-center">
+			<ScrollArea className="flex-1 px-1 py-4 sm:p-4 overflow-y-auto" ref={scrollAreaRef}>
+				<div className="w-full flex justify-center my-2">
 					<span className="text-muted-foreground opacity-50 py-1">Start Conversation with MindMate AI</span>
 				</div>
 				{optimisticMessages.map((message) => (
@@ -104,7 +104,7 @@ export function ChatInterface({ threadId, messages }: ChatInterfaceProps): JSX.E
 					</div>
 				))}
 			</ScrollArea>
-			<div className="sticky bottom-[50px] bg-background border-t px-4 pt-2 pb-4">
+			<div className="sticky bottom-[50px] bg-background border-t px-1 sm:px-4 pt-2 pb-4">
 				<form
 					action={async (data) => {
 						const userMessage = data.get('user-message') as string
