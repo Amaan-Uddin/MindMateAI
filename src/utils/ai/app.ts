@@ -1,10 +1,15 @@
 import { HumanMessage } from '@langchain/core/messages'
-import { MessagesAnnotation, StateGraph, START, END, Annotation } from '@langchain/langgraph'
+import { MessagesAnnotation, StateGraph, START, END, Annotation, LangGraphRunnableConfig } from '@langchain/langgraph'
 import { PostgresSaver } from '@langchain/langgraph-checkpoint-postgres'
 import { v4 as uuidv4 } from 'uuid'
 
+import { tool } from '@langchain/core/tools'
+import { ToolNode } from '@langchain/langgraph/prebuilt'
+import { twilioEmergencyMessage } from '../twilio-emergency'
+
 import { model } from './llm'
 import { pool } from '../db'
+import { z } from 'zod'
 
 const memory = new PostgresSaver(pool)
 await memory.setup()
@@ -25,6 +30,23 @@ const GraphAnnotation = Annotation.Root({
 	}),
 })
 
+const escalateToEmergencyService = tool(
+	async (_, config: LangGraphRunnableConfig) => {
+		const emergency: { name: string; em_contact: string } = config.configurable?.emergency
+		const response = await twilioEmergencyMessage(emergency)
+		return response
+	},
+	{
+		name: 'escalate_to_emergency_services',
+		description:
+			'Call this tool if the user expresses intent to harm themselves or others, including suicidal thoughts, self-injury, threats of violence to others, or severe emotional distress that may lead to self harm or harm others. This tool alerts appropriate emergency contacts for immediate intervention.',
+		schema: z.object({}),
+	}
+)
+
+const callTool = new ToolNode<typeof GraphAnnotation.State>([escalateToEmergencyService])
+const bindModel = model.bindTools([escalateToEmergencyService])
+
 // Define the logic to call the model
 async function callModel(state: typeof GraphAnnotation.State): Promise<Partial<typeof GraphAnnotation.State>> {
 	/**
@@ -32,18 +54,23 @@ async function callModel(state: typeof GraphAnnotation.State): Promise<Partial<t
 	 * some properties of the full state (in this case, just messages).
 	 */
 	const { messages } = state
-	const response = await model.invoke(messages)
+	const response = await bindModel.invoke(messages)
 
 	// We return an object, because this will get added to the existing state
 	return { messages: [response] }
 }
 
 // We now define the logic for determining whether to end or summarize the conversation
-function shouldContinue(state: typeof GraphAnnotation.State): 'summarize_conversation' | typeof END {
+function shouldContinue(state: typeof GraphAnnotation.State): 'summarize_conversation' | typeof END | 'tools' {
 	const messages = state.messages
 
-	// If there are more than more than or equal to 9 messages, then we summarize the conversation
+	const lastMessage = messages[messages.length - 1]
+	if ('tool_calls' in lastMessage && Array.isArray(lastMessage.tool_calls) && lastMessage.tool_calls?.length) {
+		return 'tools'
+	}
+
 	if (messages.length % 10 == 9) {
+		// If there are more than more than or equal to 9 messages, then we summarize the conversation
 		return 'summarize_conversation'
 	}
 
@@ -148,6 +175,7 @@ const workflow = new StateGraph(GraphAnnotation)
 	// Define the conversation node and the summarize node
 	.addNode('conversation', callModel)
 	.addNode('summarize_conversation', summarizeConversation)
+	.addNode('tools', callTool)
 	// Set the entrypoint as conversation
 	.addEdge(START, 'conversation')
 	// We now add a conditional edge
@@ -160,6 +188,7 @@ const workflow = new StateGraph(GraphAnnotation)
 	)
 	// We now add a normal edge from `summarize_conversation` to END.
 	// This means that after `summarize_conversation` is called, we end.
+	.addEdge('tools', 'conversation')
 	.addEdge('summarize_conversation', END)
 
 // Finally, we compile it!

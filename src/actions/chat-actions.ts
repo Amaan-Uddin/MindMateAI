@@ -29,8 +29,22 @@ export async function createMessage(userMessage: string, threadId: number) {
 		return redirect('/auth/login?message=Unauthenticated user cannot create messages')
 	}
 
+	const { data: Profile } = await supabase
+		.from('personal_info')
+		.select('emergency_phone_number')
+		.eq('user_id', user.id)
+		.single()
+
 	const input = new HumanMessage({ content: userMessage })
-	const config = { configurable: { thread_id: threadId } }
+	const config = {
+		configurable: {
+			thread_id: threadId,
+			emergency: {
+				name: user.user_metadata.name,
+				em_contact: Profile?.emergency_phone_number,
+			},
+		},
+	}
 
 	// invoke the model
 	const response = await app.invoke({ messages: [input], update: false }, config)
@@ -129,7 +143,10 @@ export async function createConversationThread() {
 
 	// invoke the model
 	const response = await app.invoke({ messages: [systemMessage, greetMessage], summary: Profile?.summary }, config)
-	const assistantMessage = response.messages[response.messages.length - 1].content
+	const assistantMessage = String(response.messages[response.messages.length - 1].content).replace(
+		/<tool-use><\/tool-use>\n{2}/g,
+		''
+	)
 
 	// save the assistant message to database
 	const { error: CreateMessageError } = await supabase
