@@ -16,7 +16,12 @@ export function PageSidebar({ children }: Props) {
 	const { isLoading, handleCreateThread } = useCreateThread()
 	return (
 		<div>
-			<div className={cn('w-64 border-r h-full p-4', open ? 'block' : 'hidden')}>
+			<div
+				className={cn(
+					'absolute inset-0 translate-y-[-24px] w-64 border-r h-full p-4 z-[8] bg-background',
+					open ? 'translate-x-[0px] opacity-100' : 'translate-x-[-256px] opacity-0'
+				)}
+			>
 				<div className="flex gap-2 w-full">
 					<Button className="w-3/4 mb-4" variant="outline" onClick={handleCreateThread} disabled={isLoading}>
 						{isLoading ? 'Creating New Chat' : 'New Chat'}
@@ -27,7 +32,14 @@ export function PageSidebar({ children }: Props) {
 				</div>
 				{children}
 			</div>
-			<div className="p-4">
+			<div
+				className={cn(
+					'fixed inset-0 translate-y-[68px] z-[5] bg-black pointer-events-auto',
+					open ? 'opacity-30 h-screen' : 'opacity-0 h-0'
+				)}
+				onClick={() => setOpen(false)}
+			></div>
+			<div className="p-4 absolute translate-y-[-24px] z-[7]">
 				<Button onClick={() => setOpen(true)} variant={'outline'}>
 					<Sidebar />
 				</Button>

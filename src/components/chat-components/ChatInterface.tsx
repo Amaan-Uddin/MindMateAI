@@ -43,7 +43,7 @@ export function ChatInterface({ threadId, messages }: ChatInterfaceProps): JSX.E
 		},
 		{
 			id: Date.now() + 10000,
-			content: 'Loading Message...',
+			content: 'Responding...',
 			role: 'load',
 		},
 	])
@@ -73,7 +73,7 @@ export function ChatInterface({ threadId, messages }: ChatInterfaceProps): JSX.E
 
 	return (
 		<div className="flex flex-col h-[calc(100vh-4rem)] w-full max-w-3xl mx-auto">
-			<ScrollArea className="flex-1 px-1 py-4 sm:p-4 overflow-y-auto" ref={scrollAreaRef}>
+			<ScrollArea className="flex-1 px-1 mb-10 mt-2 sm:mt-0 sm:p-4 overflow-y-auto" ref={scrollAreaRef}>
 				<div className="w-full flex justify-center my-2">
 					<span className="text-muted-foreground opacity-50 py-1">Start Conversation with MindMate AI</span>
 				</div>

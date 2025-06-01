@@ -16,7 +16,7 @@ export function StartNewConversation(): JSX.Element {
 	const { isLoading, handleCreateThread } = useCreateThread()
 
 	return (
-		<Button onClick={handleCreateThread} disabled={isLoading}>
+		<Button onClick={handleCreateThread} disabled={isLoading} className="mt-5 sm:mt-0">
 			{isLoading ? 'Starting...' : 'Start conversation'} <MessageCircle />
 		</Button>
 	)

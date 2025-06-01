@@ -29,14 +29,15 @@ export async function createUserProfile(data: ProfileFormValues) {
 	// unpack the result data
 	const { age, phoneNumber, conditions, emergencyName, emergencyNumber } = result.data
 	const parseAge = parseInt(age)
+	const countryCode = '+91'
 
 	// insert personal information record to database
 	const { error } = await supabase.from('personal_info').insert({
 		age: parseAge,
-		phone_number: phoneNumber,
+		phone_number: countryCode + phoneNumber,
 		conditions,
 		emergency_name: emergencyName,
-		emergency_phone_number: emergencyNumber,
+		emergency_phone_number: countryCode + emergencyNumber,
 		user_id: user.id,
 	})
 	if (error) {
@@ -68,16 +69,17 @@ export async function updateUserProfile(data: ProfileFormValues) {
 
 	const { age, phoneNumber, conditions, emergencyName, emergencyNumber } = result.data
 	const parseAge = parseInt(age)
+	const countryCode = '+91'
 
 	// update the user's personal information in database
 	const { error } = await supabase
 		.from('personal_info')
 		.update({
 			age: parseAge,
-			phone_number: phoneNumber,
+			phone_number: countryCode + phoneNumber,
 			conditions,
 			emergency_name: emergencyName,
-			emergency_phone_number: emergencyNumber,
+			emergency_phone_number: countryCode + emergencyNumber,
 		})
 		.eq('user_id', user.id)
 	if (error) {
