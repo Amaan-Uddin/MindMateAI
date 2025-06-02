@@ -139,7 +139,15 @@ export async function createConversationThread() {
 	})
 
 	const greetMessage = new HumanMessage({ content: 'Greet the user.' })
-	const config = { configurable: { thread_id: Thread.id } }
+	const config = {
+		configurable: {
+			thread_id: Thread.id,
+			emergency: {
+				name: user.user_metadata.name,
+				em_contact: Profile?.emergency_phone_number,
+			},
+		},
+	}
 
 	// invoke the model
 	const response = await app.invoke({ messages: [systemMessage, greetMessage], summary: Profile?.summary }, config)
