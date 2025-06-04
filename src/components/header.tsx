@@ -39,7 +39,13 @@ export async function Header() {
 					)}
 				</div>
 				<div className="md:hidden">
-					<MobileNav />
+					{user !== null ? (
+						<MobileNav />
+					) : (
+						<Link href={'/auth/login'}>
+							<Button>Login</Button>
+						</Link>
+					)}
 				</div>
 			</nav>
 		</header>
