@@ -17,7 +17,7 @@ import { redirect } from 'next/navigation'
  *
  * @param {number} threadId - ID of conversation thread to append messages to
  */
-export async function createMessage(userMessage: string, threadId: number) {
+export async function createMessage(userMessage: string, threadId: number): Promise<void> {
 	const supabase = await createClient()
 
 	// get current authenticated user
@@ -26,7 +26,7 @@ export async function createMessage(userMessage: string, threadId: number) {
 		error: AuthError,
 	} = await supabase.auth.getUser()
 	if (AuthError || !user) {
-		return redirect('/auth/login?message=Unauthenticated user cannot create messages')
+		redirect('/auth/login?message=Unauthenticated user cannot create messages')
 	}
 
 	const { data: Profile } = await supabase
@@ -41,7 +41,7 @@ export async function createMessage(userMessage: string, threadId: number) {
 			thread_id: threadId,
 			emergency: {
 				name: user.user_metadata.name,
-				em_contact: Profile?.emergency_phone_number,
+				emergencyContact: Profile?.emergency_phone_number,
 			},
 		},
 	}
@@ -60,7 +60,7 @@ export async function createMessage(userMessage: string, threadId: number) {
 	])
 	if (CreateMsgError) {
 		console.log('Error when creating message', CreateMsgError)
-		return redirect(`/chat?thread=${threadId}&message=Unable to create message at the moment.`)
+		redirect(`/chat?thread=${threadId}&message=Unable to create message at the moment.`)
 	}
 
 	// if summary was updated by model, store it in the user's profile
@@ -78,7 +78,7 @@ export async function createMessage(userMessage: string, threadId: number) {
  * creates a new conversation thread and greets the user with the context-aware model.
  * redirects the user to the new chat thread.
  */
-export async function createConversationThread() {
+export async function createConversationThread(): Promise<void> {
 	const supabase = await createClient()
 
 	// get current authenticated user
@@ -87,7 +87,7 @@ export async function createConversationThread() {
 		error: AuthError,
 	} = await supabase.auth.getUser()
 	if (AuthError || !user) {
-		return redirect('/auth/login?message=Unauthenticated user cannot create thread')
+		redirect('/auth/login?message=Unauthenticated user cannot create thread')
 	}
 
 	// inserting new thread record and fetching user profile for providing context to the model
@@ -101,7 +101,7 @@ export async function createConversationThread() {
 	])
 	if (InsertError || !Thread) {
 		console.error('Error creating thread:', InsertError)
-		return redirect('/chat?error=Failed to create a new conversation thread')
+		redirect('/chat?error=Failed to create a new conversation thread')
 	}
 
 	// system prompt to set assistant behavior and user context
@@ -138,13 +138,13 @@ export async function createConversationThread() {
 	`.trim(),
 	})
 
-	const greetMessage = new HumanMessage({ content: 'Greet the user.' })
+	const greetMessage = new HumanMessage({ content: 'Greet the user, and if their mood is given ask them about it.' })
 	const config = {
 		configurable: {
 			thread_id: Thread.id,
 			emergency: {
 				name: user.user_metadata.name,
-				em_contact: Profile?.emergency_phone_number,
+				emergencyContact: Profile?.emergency_phone_number,
 			},
 		},
 	}
@@ -162,11 +162,11 @@ export async function createConversationThread() {
 		.insert({ role: 'assistant', thread_id: Thread.id, content: String(assistantMessage), user_id: user.id })
 	if (CreateMessageError) {
 		console.log('Error when greeting user', CreateMessageError)
-		return redirect(`/chat?thread=${Thread.id}&message=Unable to greet user.`)
+		redirect(`/chat?thread=${Thread.id}&message=Unable to greet user.`)
 	}
 
 	// redirect to newly created chat thread
-	return redirect(`/chat?thread=${Thread.id}`)
+	redirect(`/chat?thread=${Thread.id}`)
 }
 
 /**
@@ -174,7 +174,7 @@ export async function createConversationThread() {
  *
  * @param {number} threadId - ID of conversation thread to delete
  */
-export async function deleteConversationThread(threadId: number) {
+export async function deleteConversationThread(threadId: number): Promise<void> {
 	const supabase = await createClient()
 
 	const {
@@ -182,14 +182,14 @@ export async function deleteConversationThread(threadId: number) {
 		error: AuthError,
 	} = await supabase.auth.getUser()
 	if (AuthError || !user) {
-		return redirect('/auth/login?message=Unauthenticated user cannot delete thread')
+		redirect('/auth/login?message=Unauthenticated user cannot delete thread')
 	}
 
 	// delete the thread from the database
 	const { error: DeleteError } = await supabase.from('threads').delete().eq('id', threadId)
 	if (DeleteError) {
 		console.error('Error creating thread:', DeleteError)
-		return redirect('/chat?error=Failed to create a new conversation thread')
+		redirect('/chat?error=Failed to create a new conversation thread')
 	}
 
 	// refresh the chat page to reflect the changes
@@ -203,7 +203,7 @@ export async function deleteConversationThread(threadId: number) {
  *
  * @param {string} parsedMessages - stringified messages
  */
-export async function updateThreadTitle(threadId: number, parsedMessages: string) {
+export async function updateThreadTitle(threadId: number, parsedMessages: string): Promise<void> {
 	const supabase = await createClient()
 
 	const {
@@ -211,7 +211,7 @@ export async function updateThreadTitle(threadId: number, parsedMessages: string
 		error: AuthError,
 	} = await supabase.auth.getUser()
 	if (AuthError || !user) {
-		return redirect('/auth/login?message=Unauthenticated user')
+		redirect('/auth/login?message=Unauthenticated user')
 	}
 
 	// system prompt instructing LLM to generate title for the thread

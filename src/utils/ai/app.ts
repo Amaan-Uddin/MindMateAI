@@ -32,9 +32,14 @@ const GraphAnnotation = Annotation.Root({
 
 const escalateToEmergencyService = tool(
 	async (_, config: LangGraphRunnableConfig) => {
-		const emergency: { name: string; em_contact: string } = config.configurable?.emergency
-		const response = await twilioEmergencyMessage(emergency)
-		return response
+		const emergency: { name: string; emergencyContact: string } = config.configurable?.emergency
+		try {
+			const response = await twilioEmergencyMessage(emergency.name, emergency.emergencyContact)
+			return `Alert the user that help is on its way, ${response}`
+		} catch (error) {
+			console.log('Failed to alter emergency contact', error)
+			return 'Try to Calm the user down, emergency services contact has failed.'
+		}
 	},
 	{
 		name: 'escalate_to_emergency_services',

@@ -20,14 +20,14 @@ export async function DashboardMoodPicker({ userId }: MoodPickerProps): Promise<
 
 	const { data } = await supabase.from('personal_info').select('mood').eq('user_id', userId).single()
 
-	if (data?.mood) return null
+	// if (data?.mood) return null
 
 	return (
 		<section>
 			<header className="mb-4">
 				<h1 className="text-[28px] font-bold">How are you feeling today?</h1>
 			</header>
-			<MoodSelector />
+			<MoodSelector mood={data?.mood} />
 		</section>
 	)
 }

@@ -10,7 +10,7 @@ import { ProfileFormValues, profileSchema } from '@/utils/validation/profileSche
  *
  * @param {ProfileFormValues} data - the form data containing age, phone number, medical conditions, and emergency contact details, validated by `profileSchema`
  */
-export async function createUserProfile(data: ProfileFormValues) {
+export async function createUserProfile(data: ProfileFormValues): Promise<void> {
 	const supabase = await createClient()
 
 	// get current authenticated user
@@ -19,33 +19,32 @@ export async function createUserProfile(data: ProfileFormValues) {
 		error: AuthError,
 	} = await supabase.auth.getUser()
 	if (AuthError || !user) {
-		return redirect('/auth/login?message=Unauthenticated, user cannot create profile')
+		redirect('/auth/login?message=Unauthenticated, user cannot create profile')
 	}
 
 	// validate the data with profileSchema defined using zod
 	const result = profileSchema.safeParse(data)
-	if (!result.success) return redirect('/get-started?page=personal-info&message=Invalid form submission')
+	if (!result.success) redirect('/get-started?page=personal-info&message=Invalid form submission')
 
 	// unpack the result data
 	const { age, phoneNumber, conditions, emergencyName, emergencyNumber } = result.data
 	const parseAge = parseInt(age)
-	const countryCode = '+91'
 
 	// insert personal information record to database
 	const { error } = await supabase.from('personal_info').insert({
 		age: parseAge,
-		phone_number: countryCode + phoneNumber,
+		phone_number: phoneNumber,
 		conditions,
 		emergency_name: emergencyName,
-		emergency_phone_number: countryCode + emergencyNumber,
+		emergency_phone_number: emergencyNumber,
 		user_id: user.id,
 	})
 	if (error) {
 		console.log('Failed to create user profile in db', error)
-		return redirect('/get-started?page=personal-info&message=Failed to create profile')
+		redirect('/get-started?page=personal-info&message=Failed to create profile')
 	}
 
-	return redirect('/dashboard')
+	redirect('/dashboard')
 }
 
 /**
@@ -53,7 +52,7 @@ export async function createUserProfile(data: ProfileFormValues) {
  *
  * @param {ProfileFormValues} data - the form data containing updated age, phone number, medical conditions, and emergency contact details, validated by `profileSchema`
  */
-export async function updateUserProfile(data: ProfileFormValues) {
+export async function updateUserProfile(data: ProfileFormValues): Promise<void> {
 	const supabase = await createClient()
 
 	const {
@@ -61,31 +60,30 @@ export async function updateUserProfile(data: ProfileFormValues) {
 		error: AuthError,
 	} = await supabase.auth.getUser()
 	if (AuthError || !user) {
-		return redirect('/auth/login?message=Unauthenticated, user cannot update profile')
+		redirect('/auth/login?message=Unauthenticated, user cannot update profile')
 	}
 
 	const result = profileSchema.safeParse(data)
-	if (!result.success) return redirect('/get-started?page=personal-info&edit=true&message=Invalid form submission')
+	if (!result.success) redirect('/get-started?page=personal-info&edit=true&message=Invalid form submission')
 
 	const { age, phoneNumber, conditions, emergencyName, emergencyNumber } = result.data
 	const parseAge = parseInt(age)
-	const countryCode = '+91'
 
 	// update the user's personal information in database
 	const { error } = await supabase
 		.from('personal_info')
 		.update({
 			age: parseAge,
-			phone_number: countryCode + phoneNumber,
+			phone_number: phoneNumber,
 			conditions,
 			emergency_name: emergencyName,
-			emergency_phone_number: countryCode + emergencyNumber,
+			emergency_phone_number: emergencyNumber,
 		})
 		.eq('user_id', user.id)
 	if (error) {
 		console.log('Failed to update user profile in db', error)
-		return redirect('/get-started?page=personal-info&message=Failed to update profile')
+		redirect('/get-started?page=personal-info&message=Failed to update profile')
 	}
 
-	return redirect('/dashboard')
+	redirect('/dashboard')
 }

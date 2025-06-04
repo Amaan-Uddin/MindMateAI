@@ -7,11 +7,17 @@ const accountSid = process.env.TWILIO_ACCOUNT_SID
 const authToken = process.env.TWILIO_AUTH_TOKEN
 const client = twilio(accountSid, authToken)
 
-export async function twilioEmergencyMessage({ name, em_contact }: { name: string; em_contact: string }) {
+/**
+ * This feature is only available for testing purposes and not ready for production.
+ * @param {string} name name of the user
+ * @param {string} emergencyContact emergency contact number to send distress call/message to
+ * @returns message content
+ */
+export async function twilioEmergencyMessage(name: string, emergencyContact: string) {
 	const message = await client.messages.create({
-		body: `This is MindMate AI. ${name} may be at risk of self-harm. Please contact them immediately and consider sending emergency responders. Your support is critical right now.`,
+		body: `This is MindMate AI. ${name} may be at risk of self-harm or harm others. Please contact them immediately and consider sending emergency responders. Your support is critical right now.`,
 		from: '+12792218445',
-		to: em_contact,
+		to: '+91' + emergencyContact,
 	})
 
 	return message.body

@@ -10,12 +10,12 @@ import { loginSchema, signupSchema, SignupFormValues, LoginFormValues } from '@/
  *
  * @param {SignupFormValues} data - the form data containing user's name, email and password for signup
  */
-export async function signup(data: SignupFormValues) {
+export async function signup(data: SignupFormValues): Promise<never> {
 	const supabase = await createClient()
 
 	// validate the data with signupSchema defined using zod
 	const result = signupSchema.safeParse({ name: data.name, email: data.email, password: data.password })
-	if (!result.success) return redirect('/auth/login?message=Invalid form submission')
+	if (!result.success) redirect('/auth/login?message=Invalid form submission')
 
 	// unpack result data
 	const { name, email, password } = result.data
@@ -32,10 +32,10 @@ export async function signup(data: SignupFormValues) {
 	})
 	if (error) {
 		console.log('error occurred during signup', error)
-		return redirect(`/auth/login?message=Failed to sign up user`)
+		redirect(`/auth/login?message=Failed to sign up user`)
 	}
 
-	return redirect('/get-started?page=profile')
+	redirect('/get-started?page=profile')
 }
 
 /**
@@ -47,17 +47,17 @@ export async function login(data: LoginFormValues) {
 	const supabase = await createClient()
 
 	const result = loginSchema.safeParse({ email: data.email, password: data.password })
-	if (!result.success) return redirect('/auth/login?message=Invalid form submission')
+	if (!result.success) redirect('/auth/login?message=Invalid form submission')
 
 	const { email, password } = result.data
 
 	const { error } = await supabase.auth.signInWithPassword({ email, password })
 	if (error) {
 		console.log('error occurred during login', error)
-		return redirect(`/auth/login?message=Failed to sign in user.`)
+		redirect(`/auth/login?message=Failed to sign in user.`)
 	}
 
-	return redirect('/dashboard')
+	redirect('/dashboard')
 }
 
 /**
@@ -69,8 +69,8 @@ export async function logout() {
 	const { error } = await supabase.auth.signOut()
 	if (error) {
 		console.log('error occurred during logout', error)
-		return redirect(`/auth/login?message=Logout failed. Error occurred`)
+		redirect(`/auth/login?message=Logout failed. Error occurred`)
 	}
 
-	return redirect('/')
+	redirect('/')
 }

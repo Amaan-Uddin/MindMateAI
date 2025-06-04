@@ -21,9 +21,10 @@ const moods = [
  * MoodSelector component - lets users select and submit their current mood.
  * After submission, shows a thank-you message with a link to start a chat.
  *
+ * @param {string} mood user's mood
  * @returns {JSX.Element} The mood selection UI element.
  */
-export function MoodSelector(): JSX.Element {
+export function MoodSelector({ mood }: { mood?: string | null }): JSX.Element {
 	const [selectedMood, setSelectedMood] = useState<string | null>(null)
 	const [moodSubmitted, setMoodSubmitted] = useState(false)
 
@@ -41,7 +42,7 @@ export function MoodSelector(): JSX.Element {
 	return (
 		<Card className="max-w-2xl p-6 shadow-none">
 			<CardContent className="p-0">
-				{!moodSubmitted ? (
+				{!moodSubmitted && !mood ? (
 					<>
 						<div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-5 gap-4 mb-6">
 							{moods.map((mood) => (

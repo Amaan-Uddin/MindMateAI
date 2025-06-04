@@ -8,7 +8,7 @@ import { redirect } from 'next/navigation'
  *
  * @param {string} moodValue - 'amazing' | 'good' | 'okay' | 'sad' | 'angry'
  */
-export async function updateMoodValue(moodValue: string) {
+export async function updateMoodValue(moodValue: string): Promise<void> {
 	const supabase = await createClient()
 
 	// get the current authenticated user

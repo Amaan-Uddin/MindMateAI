@@ -5,7 +5,7 @@ import { Card, CardContent } from '@/components/ui/card'
 
 export default function LandingPage() {
 	return (
-		<div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br dark:from-background dark:to-background px-4">
+		<div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br dark:from-background dark:to-background px-4 mt-5">
 			<div className="max-w-3xl w-full text-center">
 				<h1 className="text-4xl md:text-6xl font-bold text-primary mb-4">Welcome to MindMate AI</h1>
 				<p className="text-xl md:text-2xl text-muted-foreground mb-8">

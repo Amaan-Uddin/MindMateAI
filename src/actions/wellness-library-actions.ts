@@ -3,11 +3,18 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 
+type WellnessLibType = {
+	id: number
+	title: string
+	video_id: string
+	tags: string[] | null
+}
+
 /**
  * fetches a list of recommended YouTube videos for the user based on their mental health conditions.
  * @returns  {Promise<Array|null>} a list of video objects with id, title, video_id, and tags.
  */
-export async function getYoutubeVideos() {
+export async function getYoutubeVideos(): Promise<Array<WellnessLibType> | null> {
 	const supabase = await createClient()
 
 	// get current authenticated user
