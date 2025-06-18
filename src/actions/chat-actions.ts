@@ -48,7 +48,10 @@ export async function createMessage(userMessage: string, threadId: number): Prom
 
 	// invoke the model
 	const response = await app.invoke({ messages: [input], update: false }, config)
-	const assistantMessage = response.messages[response.messages.length - 1].content // extracting the latest AIMessage
+	const assistantMessage = String(response.messages[response.messages.length - 1].content).replace(
+		/<tool-use><\/tool-use>\n{2}/g,
+		''
+	) // extracting the latest AIMessage
 
 	// the `update` attribute in our LangGraph's State tracks whether the `summary` attribute was updated, it holds a boolean value
 	const { summary, update } = response
@@ -138,7 +141,7 @@ export async function createConversationThread(): Promise<void> {
 	`.trim(),
 	})
 
-	const greetMessage = new HumanMessage({ content: 'Greet the user, and if their mood is given ask them about it.' })
+	const greetMessage = new HumanMessage({ content: 'Greet the user' })
 	const config = {
 		configurable: {
 			thread_id: Thread.id,

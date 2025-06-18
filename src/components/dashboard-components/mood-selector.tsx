@@ -1,6 +1,5 @@
 'use client'
 
-import Link from 'next/link'
 import { JSX, useState } from 'react'
 
 import { Button } from '@/components/ui/button'
@@ -8,6 +7,7 @@ import { Card, CardContent } from '@/components/ui/card'
 import { cn } from '@/lib/utils'
 
 import { updateMoodValue } from '@/actions/dashboard-actions'
+import { createConversationThread } from '@/actions/chat-actions'
 
 const moods = [
 	{ value: 'amazing', emoji: '😁', label: 'Amazing' },
@@ -73,12 +73,13 @@ export function MoodSelector({ mood }: { mood?: string | null }): JSX.Element {
 							Acknowledging your feelings is the first step to managing them.
 						</p>
 
-						<Link
-							href="/chat"
-							className="inline-block mt-6 text-sm underline text-primary hover:text-primary/80 transition"
+						<Button
+							onClick={createConversationThread}
+							className="inline-block mt-6 text-sm underline text-primary hover:text-primary/80 transition cursor-pointer"
+							variant={'link'}
 						>
 							Talk to MindMate about how you&apos;re feeling
-						</Link>
+						</Button>
 					</div>
 				)}
 			</CardContent>

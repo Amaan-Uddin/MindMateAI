@@ -32,7 +32,7 @@ export async function ChatMessages({ thread }: Props): Promise<JSX.Element> {
 
 	const messageLength = MessageData!.length
 
-	if (messageLength == 7) {
+	if (messageLength == 5) {
 		const parsedMessages = JSON.stringify(MessageData)
 		await updateThreadTitle(thread, parsedMessages)
 	}

@@ -25,9 +25,6 @@ export function GuidanceButton(): JSX.Element {
 					e.preventDefault()
 				}}
 			>
-				<Link href={'/health-tips'}>
-					<DropdownMenuItem>Health Tips</DropdownMenuItem>
-				</Link>
 				<Link href={'/mental-hub'}>
 					<DropdownMenuItem>Mental Hub</DropdownMenuItem>
 				</Link>

@@ -1,6 +1,7 @@
+'use client'
 import Link from 'next/link'
 import Image from 'next/image'
-import { JSX } from 'react'
+import { JSX, useState } from 'react'
 
 interface VideCardProps {
 	data: {
@@ -26,6 +27,8 @@ interface VideCardProps {
  * @returns {JSX.Element} A clickable video card.
  */
 export function VideoCards({ data }: VideCardProps): JSX.Element {
+	const [imgSrc, setImgSrc] = useState<string>(`https://i.ytimg.com/vi/${data.video_id}/maxresdefault.jpg`)
+
 	return (
 		<Link
 			href={`https://www.youtube.com/watch?v=${data.video_id}`}
@@ -36,11 +39,12 @@ export function VideoCards({ data }: VideCardProps): JSX.Element {
 			<div className="aspect-video w-full">
 				<div className="relative group w-fit">
 					<Image
-						src={`https://i.ytimg.com/vi/${data.video_id}/maxresdefault.jpg`}
+						src={imgSrc}
 						alt={`${data.title} thumbnail`}
 						width={400}
 						height={300}
 						className="rounded-lg"
+						onError={() => setImgSrc(`https://i.ytimg.com/vi/${data.video_id}/sddefault.jpg`)}
 					/>
 
 					<div className="absolute inset-0 flex items-center justify-center bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg">
